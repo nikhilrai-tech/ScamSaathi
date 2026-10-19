@@ -4,8 +4,8 @@ All notable changes. Versions follow [Semantic Versioning](https://semver.org/);
 
 ## [0.1.0] - 2026-10-20
 
-First public pre-alpha. Nothing here is ready to protect anyone yet: the Android app has not been run on a real phone,
-accuracy on real messages is unmeasured, and nothing is deployed.
+First public pre-alpha. Nothing here is ready to protect anyone yet: accuracy on real messages is unmeasured and nothing is deployed.
+The Android app was tested on a real phone by the maintainer.
 
 ### Added
 - **Detection engine** (Python, `scamsaathi-engine`): offline, deterministic, explainable. Ten scam families (fake APK, bank KYC/OTP,
@@ -20,7 +20,7 @@ accuracy on real messages is unmeasured, and nothing is deployed.
 - **Release engineering**: APK (debug-signed test build), web demo on GitHub Pages, Python package, API image on GHCR, CI on every change.
 
 ### Known limitations
-- The Android app is untested on a device; the APK is signed with a debug key and is for trying only.
+- The APK is signed with a debug key and is for trying only.
 - No APK file analysis, voice read-out or Marathi yet.
 - Reporter ids are self-generated, so a determined attacker can fake reporters; the quorum, official-domain protection, admin
   revocation and rate limits reduce this but do not eliminate it.

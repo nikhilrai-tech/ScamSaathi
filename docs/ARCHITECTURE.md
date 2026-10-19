@@ -58,9 +58,8 @@ APK feature does not apply).
 1. **Foundations** (done): licence, governance, protected `main`, CI.
 2. **Engine v0** (done): rule-pack schema, ten first scam families, Python engine and a golden corpus with strict validation.
 3. **API v0** (done): signed packs, hashed reports with quorum, organisations, alerts, dashboard.
-4. **App v0** (done, Android untested on a device): Dart engine passing the same corpus, signed pack updates, scam feed, Saathi note, Hindi/English UI.
+4. **App v0** (done, tested on a real Android phone by the maintainer): Dart engine passing the same corpus, signed pack updates, scam feed, Saathi note, Hindi/English UI.
 5. **Next, in order**
-   - Run the app on a real Android phone and fix what breaks (share intent, launches, fonts).
    - Interviews (20) and a pilot with 3 institutions. This decides whether the Saathi loop and dashboard are wanted.
    - A labelled, consented Hindi/Marathi message set to measure precision and recall honestly.
    - APK analysis on device (package name, permissions, signing certificate; never installed).
