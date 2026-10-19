@@ -35,3 +35,26 @@ class Report(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["indicator", "reporter_hash"], name="uniq_report")]
+
+
+class Donation(models.Model):
+    """A message a person chose to send because the app got it wrong. Personal details are masked before it is stored. It carries no
+    account, device, IP address or reporter id: the person cannot be traced from it, and so cannot later ask for it to be deleted."""
+
+    class Label(models.TextChoices):
+        SCAM = "scam", "It is a scam"
+        NORMAL = "normal", "It is a normal message"
+
+    class Status(models.TextChoices):
+        NEW = "new"
+        ACCEPTED = "accepted"
+        REJECTED = "rejected"
+
+    text = models.TextField(max_length=600)
+    text_hash = models.CharField(max_length=64, unique=True, help_text="SHA-256 of the masked text, to drop duplicates")
+    label = models.CharField(max_length=8, choices=Label.choices)
+    app_verdict = models.CharField(max_length=12, help_text="What the app said: safe, suspicious or dangerous")
+    family = models.CharField(max_length=32, blank=True)
+    lang = models.CharField(max_length=2, default="hi")
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.NEW)
+    created = models.DateTimeField(auto_now_add=True)

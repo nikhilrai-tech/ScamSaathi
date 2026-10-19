@@ -21,6 +21,7 @@ UPI IDs or phone numbers.
 | `GET /v1/packs/core/pack.json` | The exact signed bytes. The app checks `sha256` and the Ed25519 signature against its pinned public key, and only accepts a higher `version` |
 | `POST /v1/reports` | `{kind, value_hash, family, reporter_hash, district?}`. Counts once per reporter. Confirmed at 3 distinct reporters. Official bank/government domains are refused |
 | `GET /v1/feed?since=<iso>` | Confirmed hashes `{kind, hash, family}`, oldest first, with `next_since` when there are more |
+| `POST /v1/feedback` | `{text, label: "scam" or "normal", app_verdict, family?, lang}`. A message the person chose to send because the app got it wrong. The server masks phone numbers, long numbers, PAN, emails, UPI IDs and link paths again, stores only the text, label and what the app said (no IP, device or reporter id), drops duplicates silently, and always answers `201 {accepted: true}`. Never published; a person reviews it in the admin site |
 | `GET /v1/alerts?district=nashik` | Active alerts from **verified** organisations in that district |
 
 If the pack is missing, unsigned or tampered with, both pack endpoints answer `503` and say nothing more (fail closed).

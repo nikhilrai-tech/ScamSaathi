@@ -32,7 +32,7 @@ REASON = {"en": "The wording is very similar to scam messages seen before.",
 
 
 def load(name):
-    path = ROOT / "packs" / "core" / f"{name}.jsonl"
+    path = Path(name) if name.endswith(".jsonl") else ROOT / "packs" / "core" / f"{name}.jsonl"
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
@@ -69,7 +69,7 @@ def mean_score(weights, text, lists):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--sets", nargs="+", required=True)
+    ap.add_argument("--sets", nargs="+", required=True, help="names of packs/core/NAME.jsonl, or paths to private .jsonl files that must never be committed")
     ap.add_argument("--target-false-alarms", type=float, default=0.03)
     ap.add_argument("--write", action="store_true")
     ap.add_argument("--out", help="with --write, save the pack here instead of packs/core/pack.json (to test a model without touching the real pack)")
@@ -108,7 +108,7 @@ def main():
     if a.write:
         pack = json.loads(pack_path.read_text(encoding="utf-8"))
         pack["model"] = {"kind": "char-ngram-nb", "ngrams": NGRAMS, "scale": SCALE, "threshold": thr, "weight": 35,
-                         "trained_on": sorted(a.sets), "reason": REASON, "weights": final}
+                         "trained_on": sorted(Path(n).stem + ("" if not n.endswith(".jsonl") else " (private)") for n in a.sets), "reason": REASON, "weights": final}
         target = Path(a.out) if a.out else pack_path
         packfmt.dump(pack, target)
         print("written to", target, f"({target.stat().st_size // 1024} KB)")

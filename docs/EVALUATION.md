@@ -67,3 +67,4 @@ Over all five sets, leave-one-set-out: rules alone 88% / 0% false alarms, model 
 2. **More normal messages**, especially from the people we want to serve: family chat, school and cooperative notices, mandi prices, in Hindi, Hinglish and English.
 3. **A new fresh set every release**, measured once.
 4. **Pilot data** from the 3 institutions in the [roadmap](ARCHITECTURE.md#roadmap).
+-

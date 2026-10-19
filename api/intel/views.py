@@ -7,9 +7,10 @@ from rest_framework.response import Response
 from rest_framework.throttling import SimpleRateThrottle
 from rest_framework.views import APIView
 
-from .models import Indicator
+from .hashing import sha256_hex
+from .models import Donation, Indicator
 from .packs import PackIntegrityError, load_signed_pack
-from .serializers import ReportSerializer
+from .serializers import FeedbackSerializer, ReportSerializer
 from .services import record_report
 
 
@@ -71,6 +72,26 @@ class ReportView(APIView):
         indicator, created = record_report(d["kind"], d["value_hash"], d["family"], d["reporter_hash"], d["district"])
         return Response({"accepted": True, "new_report": created, "confirmed": indicator.confirmed},
                         status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+
+
+class FeedbackThrottle(ReportThrottle):
+    scope = "feedback"
+    rate = "20/hour"
+
+
+class FeedbackView(APIView):
+    """Receives a message the app got wrong, only when the person chose to send it. Stores the masked text and a label: nothing else."""
+    permission_classes = [AllowAny]
+    throttle_classes = [FeedbackThrottle]
+
+    def post(self, request):
+        ser = FeedbackSerializer(data=request.data)
+        ser.is_valid(raise_exception=True)
+        d = ser.validated_data
+        Donation.objects.get_or_create(text_hash=sha256_hex(d["text"].lower()), defaults={
+            "text": d["text"], "label": d["label"], "app_verdict": d["app_verdict"], "family": d["family"], "lang": d["lang"]})
+        # always the same answer, so a sender cannot tell whether someone else sent the same message
+        return Response({"accepted": True}, status=status.HTTP_201_CREATED)
 
 
 class FeedView(PublicView):

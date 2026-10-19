@@ -1,12 +1,33 @@
 from rest_framework import serializers
 
 from .hashing import HEX64
+from .masking import mask
 from .models import Kind
 from .packs import known_families, official_domain_hashes
 
 
 def normalise_district(value: str) -> str:
     return " ".join(value.lower().split())
+
+
+class FeedbackSerializer(serializers.Serializer):
+    """A message the app got wrong, sent by the person who received it. Masked here again whatever the client did."""
+    text = serializers.CharField(min_length=5, max_length=1000, trim_whitespace=True)
+    label = serializers.ChoiceField(choices=["scam", "normal"])
+    app_verdict = serializers.ChoiceField(choices=["safe", "suspicious", "dangerous"])
+    family = serializers.CharField(max_length=32, required=False, allow_blank=True, default="")
+    lang = serializers.ChoiceField(choices=["hi", "en"], default="hi")
+
+    def validate_family(self, value):
+        if value and value not in known_families():
+            raise serializers.ValidationError("unknown scam family")
+        return value
+
+    def validate_text(self, value):
+        masked = mask(value).strip()
+        if len(masked) > 600:
+            raise serializers.ValidationError("message is too long (600 characters at most)")
+        return masked
 
 
 class ReportSerializer(serializers.Serializer):

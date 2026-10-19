@@ -1,0 +1,66 @@
+[
+ {
+  "in": "Call me on 9876543210 now",
+  "out": "Call me on 9XXXXXXXXX now"
+ },
+ {
+  "in": "Contact +91 98765 43210 today",
+  "out": "Contact 9XXXXXXXXX today"
+ },
+ {
+  "in": "Your OTP is 482913, do not share",
+  "out": "Your OTP is XXXXXX, do not share"
+ },
+ {
+  "in": "Aadhaar 1234 5678 9012 hai",
+  "out": "Aadhaar XXXX XXXX XXXX hai"
+ },
+ {
+  "in": "PAN ABCDE1234F is linked",
+  "out": "PAN AAAAA0000A is linked"
+ },
+ {
+  "in": "mail me at ram.kumar@gmail.com please",
+  "out": "mail me at user@example.com please"
+ },
+ {
+  "in": "pay to ram.kumar@ybl now",
+  "out": "pay to user@upi now"
+ },
+ {
+  "in": "Open http://sbi-kyc-update.xyz/verify?id=77 now",
+  "out": "Open http://sbi-kyc-update.xyz/… now"
+ },
+ {
+  "in": "Visit www.example.com/path/page for info",
+  "out": "Visit www.example.com/… for info"
+ },
+ {
+  "in": "Rs 5000 only, ref 12345",
+  "out": "Rs 5000 only, ref 12345"
+ },
+ {
+  "in": "card 4111 1111 1111 1111 expires",
+  "out": "card XXXX XXXX XXXX XXXX expires"
+ },
+ {
+  "in": "आपका OTP १२३४५६ है",
+  "out": "आपका OTP XXXXXX है"
+ },
+ {
+  "in": "Account 123456789012 debited",
+  "out": "Account XXXXXXXXXXXX debited"
+ },
+ {
+  "in": "Just a normal message with no personal data.",
+  "out": "Just a normal message with no personal data."
+ },
+ {
+  "in": "Link https://bit.ly/3AbCd",
+  "out": "Link https://bit.ly/…"
+ },
+ {
+  "in": "Call 98765-43210 or 9XXXXXXXXX",
+  "out": "Call 9XXXXXXXXX or 9XXXXXXXXX"
+ }
+]
