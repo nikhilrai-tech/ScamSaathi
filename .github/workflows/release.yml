@@ -54,7 +54,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
         with: {flutter-version: "3.47.4", channel: stable, cache: true}
-      - run: flutter pub get && flutter build web --release --base-href /ScamSaathi/
+      - run: flutter pub get && flutter build web --release --no-web-resources-cdn --base-href /ScamSaathi/
         working-directory: app
       - run: cd app/build/web && zip -qr "../../../ScamSaathi-${{ needs.checks.outputs.version }}-web-demo.zip" .
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9

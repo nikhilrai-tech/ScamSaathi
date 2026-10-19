@@ -34,6 +34,9 @@ ThemeData buildTheme(Brightness b) {
   final scheme = ColorScheme.fromSeed(seedColor: brandMid, brightness: b);
   return ThemeData(
     useMaterial3: true,
+    // bundled, so Hindi renders correctly on any phone and nothing is fetched from a font server
+    fontFamily: 'NotoSans',
+    fontFamilyFallback: const ['NotoSansDevanagari'],
     colorScheme: scheme,
     scaffoldBackgroundColor: b == Brightness.dark ? const Color(0xFF0E1418) : const Color(0xFFF3F7FA),
     cardTheme: CardThemeData(

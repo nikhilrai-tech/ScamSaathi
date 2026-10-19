@@ -5,7 +5,7 @@ set -euo pipefail
 OUT="${1:-/tmp/scamsaathi-shots}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 mkdir -p "$OUT"
-(cd "$ROOT/app" && flutter build web --release >/dev/null)
+(cd "$ROOT/app" && flutter build web --release --no-web-resources-cdn >/dev/null)
 (cd "$ROOT/app/build/web" && python3 -m http.server 8081 >/dev/null 2>&1) &
 SERVER=$!
 trap 'kill $SERVER 2>/dev/null || true' EXIT

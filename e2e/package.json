@@ -1,0 +1,8 @@
+{
+  "name": "scamsaathi-e2e",
+  "private": true,
+  "description": "Real-browser end-to-end tests for the ScamSaathi web build",
+  "license": "Apache-2.0",
+  "scripts": { "test": "node --test --test-timeout=120000" },
+  "devDependencies": { "puppeteer-core": "24.2.1" }
+}

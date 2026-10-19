@@ -45,3 +45,28 @@ jobs:
         working-directory: app
       - run: flutter test
         working-directory: app
+  e2e:
+    # real Chrome drives the built web app: examples, verdicts, Hindi switch, settings, and a privacy check that nothing
+    # third-party is ever contacted and no request contains the message
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2  # v2.23.0, pinned to a commit
+        with:
+          flutter-version: "3.47.4"
+          channel: stable
+          cache: true
+      - run: flutter pub get && flutter build web --release --no-web-resources-cdn
+        working-directory: app
+      - run: npm ci
+        working-directory: e2e
+      - run: npm test
+        working-directory: e2e
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        if: always()
+        with:
+          name: e2e-screenshots
+          path: e2e/artifacts/*.png
+          if-no-files-found: ignore
