@@ -17,6 +17,11 @@ const familyLabels = <String, Map<String, String>>{
   'advance_fee': {'en': 'a message asking for money first', 'hi': 'पहले पैसे मांगने वाला संदेश'},
   'impersonation': {'en': 'someone pretending to be police or an officer', 'hi': 'पुलिस या अधिकारी बनकर डराने वाला संदेश'},
   'remote_access': {'en': 'a request to install a remote-control app', 'hi': 'रिमोट कंट्रोल ऐप डलवाने की कोशिश'},
+  'utility_threat': {'en': 'a fake electricity or gas disconnection threat', 'hi': 'बिजली या गैस कनेक्शन कटने की नकली धमकी'},
+  'courier_parcel': {'en': 'a fake courier or customs parcel message', 'hi': 'नकली कूरियर या कस्टम पार्सल संदेश'},
+  'investment_scam': {'en': 'a fake investment or "double your money" offer', 'hi': 'नकली निवेश या पैसे दोगुने करने का झांसा'},
+  'family_emergency': {'en': 'someone pretending to be a relative in trouble', 'hi': 'रिश्तेदार बनकर मुसीबत में पैसे मांगने वाला संदेश'},
+  'marketplace_scam': {'en': 'a fake buyer or seller scam', 'hi': 'नकली खरीदार या विक्रेता की ठगी'},
 };
 
 /// The text sent to the user's Saathi. It names the kind of scam only: never the message, a link, a number or a UPI ID,

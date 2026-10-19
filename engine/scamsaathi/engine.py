@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from .extract import extract
+from .model import MODEL_ID, model_fires
 from .normalize import contains, normalize
 
 
@@ -20,10 +21,14 @@ def analyze(text: str, pack: dict) -> dict:
                 not any(contains(norm, u, "substring") for u in sig.get("unless", []))
         if hit:
             fired.append(sig)
+    model = pack.get("model")
+    if model and model_fires(norm, model, pack["lists"]):
+        fired.append({"id": MODEL_ID, "weight": model["weight"], "family": "generic", "reason": model["reason"]})
 
     th = pack["thresholds"]
     score = min(100, sum(s["weight"] for s in fired))
-    if score >= th["dangerous"] and len(fired) >= th["min_signals_dangerous"]:
+    rule_signals = [s for s in fired if s["id"] != MODEL_ID]  # the model alone can never make a message dangerous
+    if score >= th["dangerous"] and len(rule_signals) >= th["min_signals_dangerous"]:
         verdict = "dangerous"
     elif score >= th["suspicious"]:
         verdict = "suspicious"
@@ -37,7 +42,10 @@ def analyze(text: str, pack: dict) -> dict:
     if verdict == "safe":
         family = "none"
     elif by_family:
-        family = sorted(by_family.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
+        # a "weak" family (such as advance_fee, a pay-first modifier) names the scam only when nothing more specific fired
+        weak = set(pack.get("weak_families", []))
+        pool = {f: w for f, w in by_family.items() if f not in weak} or by_family
+        family = sorted(pool.items(), key=lambda kv: (-kv[1], kv[0]))[0][0]
     else:
         family = "unknown"
 

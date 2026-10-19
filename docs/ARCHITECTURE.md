@@ -34,6 +34,13 @@ Input: text, extracted URLs/UPI IDs/phone numbers, optional APK metadata (packag
 Output: `verdict` (`safe`, `suspicious`, `dangerous`), a score, the scam family, and **reasons**, each with a plain-language
 explanation. No score without reasons.
 
+Two layers decide the verdict:
+1. **Rules** (phrases and link features, in the pack). Every rule carries its own explanation in every language. One rule can never make a
+   message *dangerous*; at least two must agree.
+2. **A wording model** (character n-gram Naive Bayes, a few thousand integer weights inside the same signed pack). It notices wording that is
+   *similar* to scam messages, so it also catches new phrasings the rules do not know. It adds a warning but can never alone make a message
+   *dangerous*. See [EVALUATION.md](EVALUATION.md) for what it adds and where it is weak.
+
 ### Mobile app (`app/`, Flutter)
 Android first (share-target intent, APK metadata through a platform channel using `PackageManager`; the file is never
 installed). Large type, voice read-out, Hindi and Marathi first, English fallback. iOS later (no APK sideloading there, so the

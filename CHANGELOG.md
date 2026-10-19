@@ -2,6 +2,26 @@
 
 All notable changes. Versions follow [Semantic Versioning](https://semver.org/); while the major version is 0, anything may change.
 
+## [0.2.0] - 2026-10-20
+
+### Added
+- **Measured accuracy** ([docs/EVALUATION.md](docs/EVALUATION.md)): a labelled benchmark and three held-out sets of made-up messages, an evaluator
+  (`tools/evaluate.py`, with confidence intervals) and an honest history. On a fresh set the rules alone caught 42% of scams; with the new wording
+  model 75% (27 of 36, interval 59% to 86%) at 1 false alarm in 36 normal messages.
+- **Wording model**: a character n-gram Naive Bayes inside the signed pack. Integer weights, so Python and Dart agree exactly; it can warn but never alone
+  makes a message *dangerous*. Trained by `tools/train_model.py` with an out-of-fold alert threshold.
+- **Five new scam families**: electricity/gas disconnection threats, fake courier and customs parcels, investment and "double your money" tips,
+  relatives in trouble (new number, urgent money), and fake buyers and sellers (army officer, advance payment). Plus about 20 new signals and many
+  new wordings for the ten existing families, all with English and Hindi explanations.
+- A "money is being asked for" feature (an amount together with a pay or send verb) in both engines, and `weak_families`: a pay-first request names the
+  scam only when nothing more specific fired.
+- `packs/core/snapshot.json` records the engine's answer for ~480 messages; both engines are tested against it, and any rule change shows up as a diff.
+- Everyday normal messages with links (YouTube, Maps, Drive, government sites) as a training and test set.
+
+### Fixed
+- The pay-verb list matched "pay" inside "rupaye", so any message with an amount looked like a payment request.
+- Existing Hindi and English explanations are unchanged.
+
 ## [0.1.1] - 2026-10-20
 
 ### Fixed

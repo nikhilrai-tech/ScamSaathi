@@ -139,6 +139,7 @@ class ReasonTile extends StatelessWidget {
       'threat.contacts' || 'threat.secrecy' || 'impersonation' => Icons.record_voice_over_outlined,
       'fee.advance' || 'prize' || 'loan.instant' => Icons.payments_outlined,
       'remote.access' => Icons.screen_share_outlined,
+      'model.wording' => Icons.auto_awesome,
       _ => Icons.info_outline,
     };
   }

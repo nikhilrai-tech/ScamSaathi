@@ -6,9 +6,9 @@ from pathlib import Path
 from .normalize import normalize
 
 KNOWN_FEATURES = {"file.apk", "url.apk", "url.shortener", "url.ip_host", "url.punycode", "url.risky_tld",
-                  "url.lookalike_gov", "url.lookalike_brand"}
+                  "url.lookalike_gov", "url.lookalike_brand", "ask.payment"}
 LANGS = ("en", "hi")
-LIST_KEYS = ("bare_tlds", "risky_tlds", "shorteners", "gov_words", "official_gov_domains", "brands", "upi_handles")
+LIST_KEYS = ("bare_tlds", "risky_tlds", "shorteners", "gov_words", "official_gov_domains", "brands", "upi_handles", "pay_verbs")
 
 
 class PackError(ValueError):
@@ -28,8 +28,16 @@ def validate_pack(pack: dict) -> None:
     need(th.get("min_signals_dangerous", 0) >= 1, "bad min_signals_dangerous")
     families = pack.get("families", [])
     need(families and len(set(families)) == len(families) and "generic" not in families, "bad families")
+    need(set(pack.get("weak_families", [])) <= set(families), "weak_families must be families")
     for key in LIST_KEYS:
         need(key in pack.get("lists", {}), f"missing list {key}")
+    model = pack.get("model")
+    if model is not None:
+        need(model.get("kind") == "char-ngram-nb" and all(isinstance(n, int) and 2 <= n <= 6 for n in model.get("ngrams", [])) and model.get("ngrams"), "bad model.ngrams")
+        need(isinstance(model.get("threshold"), int) and isinstance(model.get("weight"), int) and 1 <= model["weight"] <= 60, "bad model threshold or weight")
+        need(all(isinstance(model.get("reason", {}).get(lang), str) and model["reason"][lang].strip() for lang in LANGS), "model needs a reason in every language")
+        w = model.get("weights")
+        need(isinstance(w, dict) and w and all(isinstance(k, str) and isinstance(v, int) for k, v in w.items()), "bad model.weights")
     seen = set()
     for sig in pack.get("signals", []):
         sid = sig.get("id")

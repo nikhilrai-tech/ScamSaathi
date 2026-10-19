@@ -6,8 +6,9 @@ farmers, students and families in India.
 It reads one message and says whether it looks like a scam, **and why**, in plain Hindi or English. Nothing is fetched, opened
 or executed, and no network is needed. It has no dependencies.
 
-> **Pre-alpha.** The rules cover ten common scam families and are tested on a small, made-up corpus. Accuracy on real messages
-> has not been measured. Treat results as a hint for a human, never as proof.
+> **Early release.** Rules for fifteen common scam families plus a small wording model. On a fresh test set of made-up messages it flagged 27 of 36
+> scams (75%) and 1 of 36 normal messages. It has not been tested on real traffic yet. Treat results as a hint for a human, never as proof.
+> Details: https://github.com/nikhilrai-tech/ScamSaathi/blob/main/docs/EVALUATION.md
 
 ```bash
 pipx install scamsaathi-engine          # or: pip install scamsaathi-engine

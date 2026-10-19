@@ -8,6 +8,8 @@ class Extracted {
 }
 
 const _trail = '.,;:!?';
+// an amount such as "rs 500", "rs.500", "inr 20,000", "₹300", "5000 rupaye", "2 lakh"
+final _amount = RegExp(r'(?:(?<![a-z])(?:rs\.?|inr)|₹)\s*\d|\d\s*(?:rupaye|rupees|rupee|rupaya|lakh|lac|hazar|रुपये|रुपए|रूपये)');
 const _tokenStrip = '.,;:!?()[]<>"\'';
 const _urlChars = r'''[^\s<>"')\]\u0080-￿]''';
 
@@ -23,6 +25,10 @@ RegExp _urlRegex(List<String> bareTlds, List<String> shorteners) {
     '|(?<![a-z0-9@./-])[a-z0-9][a-z0-9-]*(?:\\.[a-z0-9-]+)*\\.(?:$tlds)$tail',
   );
 }
+
+/// The same link pattern the extractor uses (the wording model masks links with it).
+RegExp urlPattern(Map<String, dynamic> lists) =>
+    _urlRegex((lists['bare_tlds'] as List).cast<String>(), (lists['shorteners'] as List).cast<String>());
 
 RegExp _upiRegex(List<String> handles) {
   final hs = ([...handles]..sort(_byLenThenName)).join('|');
@@ -120,6 +126,9 @@ Extracted extract(String norm, Map<String, dynamic> lists) {
   }
   for (final m in _upiRegex(list('upi_handles')).allMatches(norm)) {
     out.upiIds.add(m.group(0)!);
+  }
+  if (_amount.hasMatch(norm) && list('pay_verbs').any(norm.contains)) {
+    out.features.add('ask.payment'); // money is being asked for, not just mentioned
   }
   return out;
 }

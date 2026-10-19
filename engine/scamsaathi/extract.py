@@ -8,8 +8,10 @@ import re
 from dataclasses import dataclass, field
 
 TRAIL = ".,;:!?"
+# an amount such as "rs 500", "rs.500", "inr 20,000", "₹300", "5000 rupaye", "2 lakh"
+_AMOUNT = re.compile(r"(?:(?<![a-z])(?:rs\.?|inr)|₹)\s*\d|\d\s*(?:rupaye|rupees|rupee|rupaya|lakh|lac|hazar|रुपये|रुपए|रूपये)")
 TOKEN_STRIP = ".,;:!?()[]<>\"'"
-_URL_CHARS = r"[^\s<>\"')\]\u0080-￿]"
+_URL_CHARS = r"[^\s<>\"')\]\u0080-\uffff]"
 
 
 @dataclass
@@ -29,6 +31,11 @@ def _url_regex(bare_tlds, shorteners):
         r"|(?<![a-z0-9@./-])(?:" + shorts + r")" + tail +
         r"|(?<![a-z0-9@./-])[a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)*\.(?:" + tlds + r")" + tail
     )
+
+
+def url_pattern(lists):
+    """The same link pattern the extractor uses (the wording model masks links with it)."""
+    return _url_regex(lists["bare_tlds"], lists["shorteners"])
 
 
 def _upi_regex(handles):
@@ -114,4 +121,6 @@ def extract(norm: str, lists) -> Extracted:
             out.features.add("file.apk")
     for m in _upi_regex(lists["upi_handles"]).finditer(norm):
         out.upi_ids.add(m.group(0))
+    if _AMOUNT.search(norm) and any(v in norm for v in lists["pay_verbs"]):
+        out.features.add("ask.payment")  # money is being asked for, not just mentioned
     return out
