@@ -26,7 +26,7 @@ name on the phone itself, in Hindi or English, explains *why*, and can tell some
 | | |
 |---|---|
 | **In your browser** (no install) | **[nikhilrai-tech.github.io/ScamSaathi](https://nikhilrai-tech.github.io/ScamSaathi/)**. The same screens and engine as the app; the check runs in the page and nothing is sent anywhere. Tap an example to start. |
-| **Android** | Download the `.apk` from the [latest release](https://github.com/nikhilrai-tech/ScamSaathi/releases/latest) and check it against `SHA256SUMS`. It is a **test build signed with a debug key**, not on the Play Store, and untested on real devices. |
+| **Android** | Download the `arm64-v8a` `.apk` (most phones; `armeabi-v7a` for older ones) from the [latest release](https://github.com/nikhilrai-tech/ScamSaathi/releases/latest) and check it against `SHA256SUMS`. It asks for the internet permission only. It is a **test build signed with a debug key**, not on the Play Store, and untested on real devices. |
 | **Command line** | `pipx install scamsaathi-engine` then `scamsaathi "SBI KYC update karo warna account block ho jayega. Link: http://sbi-kyc-update.xyz/verify"`. The package is built by the release workflow and will appear on PyPI after the maintainer enables publishing; until then install the wheel from the release. |
 | **API** | `docker pull ghcr.io/nikhilrai-tech/scamsaathi-api` (published by the release workflow) or `docker compose up --build`, see [docs/API.md](docs/API.md). |
 

@@ -37,9 +37,13 @@ jobs:
       - run: flutter pub get && flutter analyze && flutter test
         working-directory: app
       # Signed with the DEBUG key: fine for trying the app, not for the Play Store. A real release key is a maintainer secret.
-      - run: flutter build apk --release --build-name "${{ needs.checks.outputs.version }}"
+      # one APK per CPU type (about a third of the size of a universal APK): arm64-v8a suits most phones of the last ~8 years
+      - run: flutter build apk --release --split-per-abi --build-name "${{ needs.checks.outputs.version }}"
         working-directory: app
-      - run: cp app/build/app/outputs/flutter-apk/app-release.apk "ScamSaathi-${{ needs.checks.outputs.version }}-test.apk"
+      - run: |
+          for abi in arm64-v8a armeabi-v7a x86_64; do
+            cp "app/build/app/outputs/flutter-apk/app-$abi-release.apk" "ScamSaathi-${{ needs.checks.outputs.version }}-$abi-test.apk"
+          done
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
         with: {name: apk, path: "ScamSaathi-*-test.apk"}
 
@@ -107,7 +111,7 @@ jobs:
 
           ---
           **Install**
-          - Android (test build, signed with a debug key): download the \`.apk\`, allow "install unknown apps" for your browser, open it. Check it against \`SHA256SUMS\` first.
+          - Android (test build, signed with a debug key): download the \`arm64-v8a\` \`.apk\` (most phones; \`armeabi-v7a\` for older ones), allow "install unknown apps" for your browser, open it. Check it against \`SHA256SUMS\` first.
           - Web demo: https://${GITHUB_REPOSITORY_OWNER}.github.io/ScamSaathi/
           - Python: \`pipx install scamsaathi-engine\` (once published on PyPI) or install the attached wheel.
           - API: \`docker pull ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/scamsaathi-api:$V\`
