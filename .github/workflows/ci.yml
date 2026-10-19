@@ -58,6 +58,10 @@ jobs:
           cache: true
       - run: flutter pub get && flutter build web --release --no-web-resources-cdn
         working-directory: app
+      - uses: actions/setup-python@v7   # the dashboard tests start a real API server
+        with:
+          python-version: "3.12"
+      - run: pip install -r api/requirements.txt
       - run: npm ci
         working-directory: e2e
       - run: npm test

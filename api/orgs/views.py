@@ -67,7 +67,7 @@ class DashboardView(OrgView):
                                       district=normalise_district(org.district), created__gte=since)
                 .values("indicator__family").annotate(n=Count("indicator", distinct=True)))
         return Response({
-            "organisation": org.name, "district": org.district, "days": 30,
+            "organisation": org.name, "district": org.district, "verified": org.verified, "days": 30,
             "confirmed_indicators_by_family": {r["indicator__family"]: r["n"] for r in rows},
             "active_alerts": Alert.objects.filter(org=org, expires_at__gt=timezone.now()).count(),
         })

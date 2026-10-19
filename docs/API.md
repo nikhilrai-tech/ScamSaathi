@@ -37,6 +37,13 @@ Header `Authorization: Api-Key <key>`. The key is shown once by `manage.py creat
 | `POST /v1/org/alerts` | Verified organisations only: `{title, body_en, body_hi, family?, days 1..30}`. Links and web addresses are refused |
 | `POST /v1/org/reports` | Verified organisations only: confirms an indicator at once |
 
+## Organisation dashboard
+
+`/org/` is a small web page for organisations (no framework, no cookies, no storage). They sign in with their API key, which stays in the page's memory only. They see
+confirmed scam indicators in their own district by kind of scam, publish alerts (verified organisations only; links are refused), and confirm a scam website, UPI ID or app file:
+the browser hashes the value before sending, so the server never sees it. The page is served with a strict Content-Security-Policy (no inline script, own origin only), and every piece
+of text from the server is shown with `textContent`, never as HTML; tests check both.
+
 ## Running it
 
 ```bash

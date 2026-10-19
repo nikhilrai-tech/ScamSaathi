@@ -1,0 +1,22 @@
+:root { --bg:#f3f7fa; --card:#fff; --ink:#0f1e29; --muted:#51616d; --brand:#0b3c5d; --brand2:#1d6fa5; --line:#d5e0e8; --err:#b3261e; --ok:#1b6e3c; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0e1418; --card:#172027; --ink:#e8f0f5; --muted:#a2b2bd; --line:#2b3a45; --err:#ffb4ab; --ok:#9ddbad; } }
+* { box-sizing: border-box; }
+body { margin:0; font:17px/1.45 "Noto Sans", system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; }
+h1 { margin:0; font-size:1.3rem; } h2 { margin:0 0 .4rem; font-size:1.15rem; }
+main { max-width:760px; margin:0 auto; padding:16px; }
+section { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:16px; }
+label { display:block; margin:.8rem 0 .25rem; font-weight:600; }
+input, textarea, select { width:100%; padding:.65rem .75rem; font:inherit; color:inherit; background:var(--bg); border:1px solid var(--line); border-radius:10px; }
+button { font:inherit; padding:.7rem 1.1rem; margin-top:1rem; border:0; border-radius:10px; background:var(--brand2); color:#fff; cursor:pointer; font-weight:600; }
+button.ghost { background:rgba(255,255,255,.18); margin:0 0 0 .5rem; padding:.45rem .8rem; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline:3px solid #14b8a6; outline-offset:2px; }
+.row { display:grid; grid-template-columns:1fr 1fr; gap:12px; } @media (max-width:520px) { .row { grid-template-columns:1fr; } }
+.note { color:var(--muted); font-size:.92rem; margin:.2rem 0 .6rem; }
+.error { color:var(--err); min-height:1.3em; } .ok { color:var(--ok); }
+.bars, .list { list-style:none; padding:0; margin:0; }
+.bars li { margin:.6rem 0; } .bars .name { display:flex; justify-content:space-between; font-size:.95rem; }
+.bars .track { height:12px; background:var(--bg); border:1px solid var(--line); border-radius:8px; overflow:hidden; } .bars .fill { height:100%; background:var(--brand2); }
+.list li { padding:.7rem 0; border-top:1px solid var(--line); } .list li:first-child { border-top:0; } .list .meta { color:var(--muted); font-size:.85rem; }
+footer { text-align:center; color:var(--muted); font-size:.85rem; padding:16px; }
+[hidden] { display:none !important; }
