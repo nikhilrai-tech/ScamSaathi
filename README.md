@@ -41,7 +41,7 @@ Existing checkers are mostly English-first and cloud-based. ScamSaathi is built 
 together (see the [honest market map](docs/MARKET.md), which also lists the projects that already exist):
 
 1. **Share-to-check.** Share a message from WhatsApp or SMS to the app, or tap an example. The verdict comes with plain-language
-   reasons, not just a label. **Check an app file too:** pick a suspicious `.apk` and see what it asks for (read your SMS and OTPs, read your
+   reasons, not just a label, and a **Listen** button reads it aloud for people who read slowly. **Check an app file too:** pick a suspicious `.apk` and see what it asks for (read your SMS and OTPs, read your
    screen, call for you...) in plain words. Only its manifest is read; it is never installed, run or uploaded.
 2. **Offline and private by default.** Detection runs on the phone from signed rule packs. The message is never uploaded.
    Reporting a scam is opt-in and sends only hashes of the link or UPI ID, never the message.
@@ -80,8 +80,8 @@ More in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (threat model included).
 |---|---|
 | Python engine, 119 tests; Dart engine gives the same answer on all ~480 messages we have (snapshot) | Verified in CI |
 | API, 46 tests including forged signatures, poisoning and link-filtering | Verified in CI |
-| Flutter app: 130 tests, `flutter analyze`, web build, screenshots rendered from the real build | Verified in CI / locally |
-| Real-browser end-to-end tests in Chrome (15): examples, verdicts, Hindi switch, app files, the organisation dashboard against a real server, and "no third-party host contacted, no request contains the message" | Verified in CI |
+| Flutter app: 138 tests, `flutter analyze`, web build, screenshots rendered from the real build | Verified in CI / locally |
+| Real-browser end-to-end tests in Chrome (17): examples, verdicts, Hindi switch, app files, the organisation dashboard against a real server, and "no third-party host contacted, no request contains the message" | Verified in CI |
 | App-file (APK) reader: 8 test apps built with the Android tools, the real release APK compared with `aapt2`, damaged and truncated files, and both engines agree; also driven in a real browser | Verified in CI / locally |
 | Docker image: built, ran as non-root, served a signed pack, refused an unsigned one | Verified locally |
 | Android app on a real phone | Tested by the maintainer |

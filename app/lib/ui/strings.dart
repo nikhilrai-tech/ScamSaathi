@@ -158,6 +158,66 @@ const _s = <String, Map<String, String>>{
   },
   'sampleApkFake': {'hi': 'नकली PM-Kisan ऐप फ़ाइल', 'en': 'Fake PM-Kisan app file'},
   'sampleApkOk': {'hi': 'सामान्य टॉर्च ऐप फ़ाइल', 'en': 'Harmless torch app file'},
+  'listen': {'hi': 'सुनें', 'en': 'Listen'},
+  'stopListening': {'hi': 'रोकें', 'en': 'Stop'},
+  'obNext': {'hi': 'आगे', 'en': 'Next'},
+  'obSkip': {'hi': 'छोड़ें', 'en': 'Skip'},
+  'obStart': {'hi': 'शुरू करें', 'en': 'Get started'},
+  'ob1Title': {'hi': 'भरोसा करने से पहले जाँचें', 'en': 'Check before you trust'},
+  'ob1Body': {
+    'hi': 'कोई मैसेज, लिंक या ऐप फ़ाइल ठगी तो नहीं? WhatsApp या SMS से शेयर करें, या यहाँ पेस्ट करें। जवाब आसान भाषा में, कारण के साथ मिलेगा।',
+    'en': 'Is a message, link or app file a scam? Share it from WhatsApp or SMS, or paste it here. You get a plain answer with the reasons.',
+  },
+  'ob2Title': {'hi': 'आपका मैसेज फोन से बाहर नहीं जाता', 'en': 'Your message stays on your phone'},
+  'ob2Body': {
+    'hi': 'जाँच इसी फोन पर होती है। ऐप आपके SMS, कॉन्टैक्ट्स या फाइलें नहीं पढ़ता। कुछ भी तभी भेजा जाता है जब आप खुद चालू करें या "भेजें" दबाएँ।',
+    'en': 'The check runs on this phone. The app does not read your SMS, contacts or files. Anything is sent only if you turn it on or tap Send.',
+  },
+  'ob3Title': {'hi': 'एक भरोसेमंद व्यक्ति चुनें (वैकल्पिक)', 'en': 'Choose someone you trust (optional)'},
+  'ob3Body': {
+    'hi': 'बेटा, शिक्षक या पड़ोसी। ख़तरा दिखे तो आप उन्हें एक छोटा संदेश भेज सकते हैं, जिसमें आपका मैसेज नहीं होता।',
+    'en': 'A son, a teacher, a neighbour. When something looks dangerous you can send them a short note that never contains your message.',
+  },
+  'aboutSection': {'hi': 'जानकारी', 'en': 'About'},
+  'aboutPrivacy': {'hi': 'निजता', 'en': 'Privacy'},
+  'aboutHow': {'hi': 'यह कैसे काम करता है', 'en': 'How it works'},
+  'readMore': {'hi': 'पूरी जानकारी GitHub पर खोलें', 'en': 'Read the full details on GitHub'},
+  'p1': {
+    'hi': 'फोन पर रहता है: आपकी भाषा, आपके चुने "साथी" का नाम और नंबर, और ठगी की सार्वजनिक सूची (सिर्फ हैश)।',
+    'en': 'Stays on your phone: your language, the name and number of the Saathi you chose, and the community scam list (hashes only).',
+  },
+  'p2': {
+    'hi': 'कभी नहीं: खाता, विज्ञापन, ट्रैकिंग, या आपके SMS, कॉन्टैक्ट्स और लोकेशन तक पहुँच।',
+    'en': 'Never: accounts, ads, tracking, or access to your SMS, contacts or location.',
+  },
+  'p3': {
+    'hi': 'सिर्फ आपकी अनुमति से: (1) गुमनाम रिपोर्ट, जिसमें लिंक या UPI आईडी का सिर्फ कोड (हैश) जाता है। (2) "यह नतीजा गलत है", जहाँ आप मैसेज देखकर "भेजें" दबाते हैं, नंबर जैसी निजी बातें छुपाकर।',
+    'en': 'Only with your permission: (1) anonymous reports, which send only a code (hash) of a link or UPI ID. (2) "This result is wrong", where you read the message and tap Send, with numbers and similar details hidden.',
+  },
+  'p4': {
+    'hi': 'सुनने का बटन सिर्फ नतीजे के कारण पढ़ता है, आपका मैसेज नहीं। आपके फोन का आवाज़ इंजन उन्हें बोलता है।',
+    'en': 'The Listen button reads out only the reasons, never your message. Your phone\'s speech engine says them.',
+  },
+  'h1': {
+    'hi': 'दो चीज़ें मिलकर तय करती हैं: (1) साफ़ नियम (जैसे "ओटीपी माँगना", "पहले पैसे माँगना") जो हर चेतावनी का कारण बताते हैं, और (2) एक छोटा मॉडल जो पहले देखे ठगी वाले मैसेजों से मिलते शब्द पहचानता है।',
+    'en': 'Two things decide together: (1) clear rules (like "asks for an OTP" or "asks for money first") that explain every warning, and (2) a small model that notices wording similar to scam messages seen before.',
+  },
+  'h2': {
+    'hi': 'सिर्फ एक संकेत से "ख़तरनाक" नहीं कहा जाता। कम से कम दो नियम मिलने चाहिए।',
+    'en': 'One sign alone never says "dangerous". At least two rules must agree.',
+  },
+  'h3': {
+    'hi': 'यह गलत भी हो सकता है। ठगी छूट सकती है और ठीक मैसेज पर भी चेतावनी आ सकती है। शक हो तो पैसे न दें और किसी भरोसेमंद से पूछें।',
+    'en': 'It can be wrong. It can miss a scam and can warn about a normal message. If unsure, do not pay and ask someone you trust.',
+  },
+  'h4': {
+    'hi': 'ऐप फ़ाइल की जाँच सिर्फ उसकी इजाज़तों की सूची पढ़ती है। फ़ाइल कभी चलाई नहीं जाती।',
+    'en': 'The app-file check only reads its list of permissions. The file is never run.',
+  },
+  'h5': {
+    'hi': 'यह कितना सही है, इसका हिसाब GitHub पर खुला है, गलतियों समेत।',
+    'en': 'How well it works is published openly on GitHub, mistakes included.',
+  },
   'howTitle': {
     'hi': 'आपका मैसेज कहीं नहीं जाता',
     'en': 'Your message never leaves this phone',

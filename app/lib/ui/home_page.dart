@@ -195,6 +195,19 @@ class _ResultCard extends StatelessWidget {
             Text(tr('why', lang), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: p.text)),
             for (final r in a.reasons) ReasonTile(reason: r, lang: lang, palette: p),
           ],
+          if (c.canSpeak)
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: OutlinedButton.icon(
+                  onPressed: c.toggleSpeaking,
+                  icon: Icon(c.speaking ? Icons.stop_circle_outlined : Icons.volume_up_outlined, color: p.text),
+                  label: Text(tr(c.speaking ? 'stopListening' : 'listen', lang), style: TextStyle(fontSize: 18, color: p.text)),
+                  style: OutlinedButton.styleFrom(side: BorderSide(color: p.accent)),
+                ),
+              ),
+            ),
           if (a.apk != null) ApkDetails(apk: a.apk!, lang: lang, palette: p),
           if (a.verdict != 'safe') ...[
             const SizedBox(height: 18),

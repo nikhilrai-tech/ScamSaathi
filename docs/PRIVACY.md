@@ -38,6 +38,11 @@ If you tap Send, you donate a message so we can fix mistakes.
   The trained model's weights are public (they are part of the signed rule pack); to reduce what they can reveal, rare word fragments are dropped
   (a word fragment is kept only if it appears at least twice in the training texts; it is counted over all texts, so a fragment repeated inside one message can still be kept). That lowers the risk of a message being recoverable from the model but cannot reduce it to zero, which is why masking and review come first.
 
+## The Listen button
+
+Tapping **Listen** reads out the verdict, the advice and the reasons using your phone's own speech engine. It never reads your message, a link or a number, so nothing private is
+spoken. Some phones and browsers use an *online* voice for some languages; because only generic sentences are spoken, nothing you received is revealed even then.
+
 ## What we do not do
 
 No analytics or tracking libraries, no advertising, no sale or sharing of data, no reading of your SMS or WhatsApp (the app sees a message only when **you** paste or share it),

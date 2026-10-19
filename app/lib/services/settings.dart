@@ -23,6 +23,10 @@ class AppSettings {
   String get ownName => _p.getString('own_name') ?? '';
   set ownName(String v) => _p.setString('own_name', v.trim());
 
+  /// Whether the first-run screens were seen (or skipped).
+  bool get onboarded => _p.getBool('onboarded') ?? false;
+  set onboarded(bool v) => _p.setBool('onboarded', v);
+
   /// Cached community feed (hashes only), so matching works offline after the first sync.
   String? get feedCache => _p.getString('feed_cache');
   set feedCache(String? v) => v == null ? _p.remove('feed_cache') : _p.setString('feed_cache', v);

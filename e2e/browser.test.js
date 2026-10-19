@@ -193,3 +193,35 @@ test('the harmless sample app file is not accused', async () => {
   assert.ok(t.includes('Use the flashlight') && !t.includes('DANGEROUS'));
   await page.close();
 });
+
+test('Listen reads the result aloud and Stop stops it, without any network traffic or errors', async () => {
+  const { page, requests, errors } = await open();
+  await click(page, { role: 'checkbox', label: 'Fake bank KYC' });
+  await waitForText(page, 'DANGEROUS');
+  const mark = requests.length;
+  await click(page, { role: 'button', text: 'Listen' });
+  await waitForText(page, 'Stop');
+  await click(page, { role: 'button', text: 'Stop' });
+  await waitForText(page, 'Listen');
+  await sleep(500);
+  assert.deepEqual(requests.slice(mark), [], 'reading aloud must not make a request');
+  assert.deepEqual(errors, []);
+  await page.close();
+});
+
+test('first-run screens: three steps, switch to Hindi, then the home screen', async () => {
+  const page = await browser.newPage();
+  await page.setViewport({ width: 430, height: 900 });
+  await page.goto(base + '/?onboarding=1&lang=en&theme=light', { waitUntil: 'networkidle0', timeout: 60000 });
+  await page.waitForSelector('flt-semantics-placeholder', { timeout: 30000 });
+  await page.evaluate(() => document.querySelector('flt-semantics-placeholder').click());
+  await waitForText(page, 'Check before you trust');
+  await click(page, { role: 'button', text: 'Next' });
+  await waitForText(page, 'Your message stays on your phone');
+  await shot(page, 'onboarding-2');
+  await click(page, { role: 'button', text: 'Next' });
+  await waitForText(page, 'Choose someone you trust');
+  await click(page, { role: 'button', text: 'Get started' });
+  await waitForText(page, 'golden rules');
+  await page.close();
+});
