@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,6 +48,7 @@ Future<void> main() async {
     client: http.Client(),
     launch: (uri) => launchUrl(uri, mode: LaunchMode.externalApplication),
     apiBase: _apiBase.isEmpty ? null : Uri.parse(_apiBase),
+    pickApk: _pickApkFile,
   );
 
   if (kIsWeb) {
@@ -68,6 +70,13 @@ Future<void> main() async {
   final shared = await intake.initial();
   if (shared != null) controller.check(shared);
   controller.refresh();
+}
+
+/// Let the person choose an app file. Only .apk files are offered; its bytes are read on the device and never uploaded.
+Future<PickedApk?> _pickApkFile() async {
+  final f = await FilePicker.pickFile(type: FileType.custom, allowedExtensions: ['apk']);
+  if (f == null) return null;
+  return PickedApk(f.name, await f.length(), f.readAsBytes);
 }
 
 class ScamSaathiApp extends StatelessWidget {

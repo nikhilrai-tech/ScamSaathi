@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+import 'engine/apk.dart';
 import 'engine/engine.dart';
 import 'services/feed.dart';
 import 'services/pack_store.dart';
@@ -11,6 +12,18 @@ import 'services/saathi.dart';
 import 'services/settings.dart';
 
 typedef Launch = Future<bool> Function(Uri uri);
+
+/// An app file the person chose. The bytes are read only when needed; the file is never installed or run.
+class PickedApk {
+  final String name;
+  final int? size;
+  final Future<Uint8List> Function() read;
+  const PickedApk(this.name, this.size, this.read);
+}
+
+typedef ApkPicker = Future<PickedApk?> Function();
+
+const maxApkBytes = 150 * 1024 * 1024;
 
 enum ReportOutcome { none, sent, failed }
 
@@ -26,6 +39,7 @@ class AppController extends ChangeNotifier {
     required this.client,
     required this.launch,
     this.apiBase,
+    this.pickApk,
   });
 
   final PackStore packStore;
@@ -33,10 +47,12 @@ class AppController extends ChangeNotifier {
   final Feed feed;
   final http.Client client;
   final Launch launch;
+  final ApkPicker? pickApk; // null where picking files is not possible
   final Uri? apiBase; // null = fully offline build: no updates, no feed, no reports
 
   Analysis? result;
   String text = '';
+  String? apkMessage; // string key explaining why a chosen file could not be read
   ReportOutcome reportOutcome = ReportOutcome.none;
 
   String get lang => settings.language;
@@ -49,12 +65,33 @@ class AppController extends ChangeNotifier {
 
   void check(String input) {
     text = input;
+    apkMessage = null;
     reportOutcome = ReportOutcome.none;
     result = input.trim().isEmpty ? null : feed.apply(analyze(input, packStore.current));
     notifyListeners();
   }
 
   void clear() => check('');
+
+  /// Check an app file. Only its manifest is read (permissions and names); nothing is installed, run or uploaded.
+  Future<void> checkApk(PickedApk picked) async {
+    text = picked.name;
+    reportOutcome = ReportOutcome.none;
+    apkMessage = null;
+    result = null;
+    if ((picked.size ?? 0) > maxApkBytes) {
+      apkMessage = 'apkTooBig';
+    } else {
+      try {
+        final info = parseApk(await picked.read());
+        info.fileName = picked.name.toLowerCase().endsWith('.apk') ? picked.name.substring(0, picked.name.length - 4) : picked.name;
+        result = feed.apply(analyze('', packStore.current, apk: info));
+      } on ApkError {
+        apkMessage = 'apkNotApp';
+      }
+    }
+    notifyListeners();
+  }
 
   void saveSaathi(Saathi? saathi, {String? ownName}) {
     settings.setSaathi(saathi);

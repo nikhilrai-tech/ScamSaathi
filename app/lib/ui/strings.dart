@@ -142,6 +142,22 @@ const _s = <String, Map<String, String>>{
   'fbCancel': {'hi': 'रद्द करें', 'en': 'Cancel'},
   'fbThanks': {'hi': 'धन्यवाद! आपका मैसेज मिल गया।', 'en': 'Thank you! We received your message.'},
   'fbFailed': {'hi': 'भेजा नहीं जा सका। बाद में कोशिश करें।', 'en': 'Could not send. Please try again later.'},
+  'checkApk': {'hi': 'APK फ़ाइल जाँचें', 'en': 'Check an APK file'},
+  'apkNotApp': {'hi': 'यह एंड्रॉयड ऐप फ़ाइल नहीं लगती, या खराब है।', 'en': 'This does not look like an Android app, or it is damaged.'},
+  'apkTooBig': {'hi': 'फ़ाइल बहुत बड़ी है (150 MB से ज़्यादा)।', 'en': 'The file is too big (over 150 MB).'},
+  'apkAsks': {'hi': 'यह ऐप क्या-क्या माँगता है', 'en': 'What this app asks for'},
+  'apkPackage': {'hi': 'ऐप का पैकेज नाम', 'en': 'App package name'},
+  'apkMore': {'hi': 'और इजाज़तें', 'en': 'more permissions'},
+  'apkNote': {
+    'hi': 'हम सिर्फ इजाज़तों की सूची पढ़ते हैं। कम इजाज़त माँगने वाली फ़ाइल भी जाल हो सकती है। ऐप सिर्फ प्ले स्टोर से इंस्टॉल करें।',
+    'en': 'We only read the list of permissions. A file that asks for few can still be a trap. Install apps only from the Play Store.',
+  },
+  'apkPrivate': {
+    'hi': 'आपकी फ़ाइल कभी इंस्टॉल या चलाई नहीं जाती और इस डिवाइस से बाहर नहीं जाती।',
+    'en': 'Your file is never installed or run, and it never leaves this device.',
+  },
+  'sampleApkFake': {'hi': 'नकली PM-Kisan ऐप फ़ाइल', 'en': 'Fake PM-Kisan app file'},
+  'sampleApkOk': {'hi': 'सामान्य टॉर्च ऐप फ़ाइल', 'en': 'Harmless torch app file'},
   'howTitle': {
     'hi': 'आपका मैसेज कहीं नहीं जाता',
     'en': 'Your message never leaves this phone',

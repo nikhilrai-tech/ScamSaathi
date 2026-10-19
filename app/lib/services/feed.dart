@@ -51,11 +51,14 @@ class Feed {
     for (final u in a.indicators['upi_ids'] ?? const <String>[]) {
       family ??= families[key('upi', sha256Hex(u))];
     }
+    for (final h in a.indicators['apk_sha256'] ?? const <String>[]) {
+      family ??= families[key('apk_sha256', h)]; // an app file is identified by its own SHA-256, which is already a hash
+    }
     if (family == null) return a;
     const reason = Reason('feed.confirmed', 60, {
-      'en': 'Other people and trusted organisations have already reported this link or UPI ID as a scam.',
-      'hi': 'दूसरे लोगों और भरोसेमंद संस्थाओं ने इस लिंक या UPI आईडी को पहले ही ठगी बताया है।',
+      'en': 'Other people and trusted organisations have already reported this link, UPI ID or app file as a scam.',
+      'hi': 'दूसरे लोगों और भरोसेमंद संस्थाओं ने इस लिंक, UPI आईडी या ऐप फ़ाइल को पहले ही ठगी बताया है।',
     });
-    return Analysis('dangerous', 100, family, [reason, ...a.reasons], a.indicators);
+    return Analysis('dangerous', 100, family, [reason, ...a.reasons], a.indicators, apk: a.apk);
   }
 }

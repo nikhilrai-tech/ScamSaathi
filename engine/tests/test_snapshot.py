@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from scamsaathi import analyze, load_pack
+from scamsaathi.apk import parse_apk
 
 CORE = Path(__file__).resolve().parents[2] / "packs" / "core"
 PACK = load_pack(CORE / "pack.json")
@@ -13,7 +14,11 @@ SNAP = json.loads((CORE / "snapshot.json").read_text(encoding="utf-8"))
 def test_snapshot_matches_the_engine():
     stale = []
     for row in SNAP:
-        a = analyze(row["text"], PACK)
+        apk = None
+        if row.get("apk"):
+            apk = parse_apk((CORE / "apk" / row["apk"]).read_bytes())
+            apk["file_name"] = Path(row["apk"]).stem
+        a = analyze(row["text"], PACK, apk)
         if (a["verdict"], a["score"], a["family"], [x["id"] for x in a["reasons"]]) != (row["verdict"], row["score"], row["family"], row["signals"]):
             stale.append(row["id"])
     assert not stale, f"snapshot is out of date for {len(stale)} messages, e.g. {stale[:5]}: run tools/snapshot.py"

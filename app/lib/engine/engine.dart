@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'apk.dart';
 import 'extract.dart';
 import 'model.dart';
 import 'normalize.dart';
@@ -17,7 +18,8 @@ class Analysis {
   final String family;
   final List<Reason> reasons;
   final Map<String, List<String>> indicators;
-  const Analysis(this.verdict, this.score, this.family, this.reasons, this.indicators);
+  final ApkInfo? apk; // what the app file asks for, when one was checked
+  const Analysis(this.verdict, this.score, this.family, this.reasons, this.indicators, {this.apk});
 }
 
 class Pack {
@@ -39,7 +41,24 @@ class Pack {
 
 /// Verdict for one message. Port of engine/scamsaathi/engine.py: deterministic, nothing fetched or opened.
 /// A single signal can never make a message `dangerous`.
-Analysis analyze(String text, Pack pack) {
+/// Does what an app asks for match this signal? Only the manifest is known, never what the code does.
+bool apkHit(Map<String, dynamic> sig, ApkInfo apk, Map<String, dynamic> lists) {
+  final perms = {...apk.permissions, ...apk.componentPermissions};
+  List<String> strs(Object? v) => ((v as List?) ?? const []).cast<String>();
+  if (strs(sig['any_permissions']).any(perms.contains)) return true;
+  if (strs(sig['any_actions']).any(apk.actions.contains)) return true;
+  if (sig['min_sensitive'] is int) {
+    final sensitive = strs(lists['sensitive_permissions']).toSet();
+    if (perms.where(sensitive.contains).length >= (sig['min_sensitive'] as int)) return true;
+  }
+  if (sig['brand_names'] == true) {
+    final names = '${apk.package} ${apk.label} ${apk.fileName}'.toLowerCase();
+    return strs(lists['apk_brand_words']).any(names.contains);
+  }
+  return false;
+}
+
+Analysis analyze(String text, Pack pack, {ApkInfo? apk}) {
   final norm = normalize(text);
   final found = extract(norm, pack.lists);
   final fired = <Map<String, dynamic>>[];
@@ -47,6 +66,8 @@ Analysis analyze(String text, Pack pack) {
     bool hit;
     if (sig['type'] == 'feature') {
       hit = found.features.contains(sig['feature']);
+    } else if (sig['type'] == 'apk') {
+      hit = apk != null && apkHit(sig, apk, pack.lists);
     } else {
       final mode = sig['match'] as String;
       hit = (sig['phrases'] as List).cast<String>().any((p) => containsPhrase(norm, p, mode)) &&
@@ -107,6 +128,8 @@ Analysis analyze(String text, Pack pack) {
       'domains': found.domains.toList()..sort(),
       'apk_files': found.apkFiles.toList()..sort(),
       'upi_ids': found.upiIds.toList()..sort(),
+      'apk_sha256': apk != null && apk.sha256.isNotEmpty ? [apk.sha256] : <String>[],
     },
+    apk: apk,
   );
 }

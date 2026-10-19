@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../app_controller.dart';
 import '../engine/engine.dart';
+import 'apk_details.dart';
 import 'feedback_sheet.dart';
 import 'settings_page.dart';
 import 'strings.dart';
@@ -47,6 +48,19 @@ class _HomePageState extends State<HomePage> {
       _text.text = data!.text!;
       c.check(_text.text);
     }
+  }
+
+  Future<void> _pickApk() async {
+    final picker = c.pickApk;
+    if (picker == null) return;
+    final picked = await picker();
+    if (picked != null) await c.checkApk(picked);
+  }
+
+  Future<void> _apkSample(String asset) async {
+    final data = await rootBundle.load(asset);
+    final bytes = data.buffer.asUint8List();
+    await c.checkApk(PickedApk(asset.split('/').last, bytes.length, () async => bytes));
   }
 
   void _openSettings() => Navigator.of(context).push(MaterialPageRoute(builder: (_) => SettingsPage(controller: c)));
@@ -103,8 +117,21 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ]),
+                  if (c.pickApk != null) ...[
+                    const SizedBox(height: 12),
+                    OutlinedButton.icon(
+                      onPressed: _pickApk,
+                      icon: const Icon(Icons.android),
+                      label: Text(tr('checkApk', lang), style: const TextStyle(fontSize: 18)),
+                    ),
+                  ],
+                  if (c.apkMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 12),
+                      child: Text(tr(c.apkMessage!, lang), style: TextStyle(fontSize: 17, color: Theme.of(context).colorScheme.error)),
+                    ),
                   const SizedBox(height: 16),
-                  SampleChips(lang: lang, onPick: c.check),
+                  SampleChips(lang: lang, onPick: c.check, onApkSample: _apkSample),
                   AnimatedSize(
                     duration: MediaQuery.disableAnimationsOf(context) ? Duration.zero : const Duration(milliseconds: 250),
                     curve: Curves.easeOut,
@@ -168,6 +195,7 @@ class _ResultCard extends StatelessWidget {
             Text(tr('why', lang), style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: p.text)),
             for (final r in a.reasons) ReasonTile(reason: r, lang: lang, palette: p),
           ],
+          if (a.apk != null) ApkDetails(apk: a.apk!, lang: lang, palette: p),
           if (a.verdict != 'safe') ...[
             const SizedBox(height: 18),
             FilledButton.icon(

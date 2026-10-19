@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scamsaathi/engine/apk.dart';
 import 'package:scamsaathi/engine/engine.dart';
 
 void main() {
@@ -15,7 +16,12 @@ void main() {
   test('Dart matches Python on every message in the snapshot', () {
     final bad = <String>[];
     for (final r in rows) {
-      final a = analyze(r['text'] as String, pack);
+      ApkInfo? apk;
+      if (r['apk'] != null) {
+        final name = r['apk'] as String;
+        apk = parseApk(File('../packs/core/apk/$name').readAsBytesSync())..fileName = name.replaceAll('.apk', '');
+      }
+      final a = analyze(r['text'] as String, pack, apk: apk);
       final got = '${a.verdict}|${a.score}|${a.family}|${a.reasons.map((x) => x.id).join(',')}';
       final want = '${r['verdict']}|${r['score']}|${r['family']}|${(r['signals'] as List).join(',')}';
       if (got != want) bad.add('${r['id']}: want $want, got $got');

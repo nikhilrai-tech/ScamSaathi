@@ -80,7 +80,7 @@ def test_analyze_is_deterministic_and_has_reasons_for_every_non_safe_verdict():
 
 def test_indicators_carry_no_message_text():
     r = analyze("Install Fake-App.apk from http://evil.top/a and pay demo.user@ybl", PACK)
-    assert r["indicators"] == {"domains": ["evil.top"], "apk_files": ["fake-app.apk"], "upi_ids": ["demo.user@ybl"]}
+    assert r["indicators"] == {"domains": ["evil.top"], "apk_files": ["fake-app.apk"], "upi_ids": ["demo.user@ybl"], "apk_sha256": []}
 
 
 @pytest.mark.parametrize("mutate,msg", [

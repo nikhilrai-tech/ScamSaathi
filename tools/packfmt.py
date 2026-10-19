@@ -5,8 +5,10 @@ def sig(s):
     lines = ['    {' + ", ".join(f'"{k}": {fmt(s[k])}' for k in ("id","type") if k in s)]
     rest = [k for k in ("feature","match","weight","family") if k in s]
     if rest: lines[0] += ", " + ", ".join(f'"{k}": {fmt(s[k])}' for k in rest)
-    for k in ("phrases","unless"):
+    for k in ("phrases","unless","any_permissions","any_actions","min_sensitive","brand_names"):
         if k in s: lines.append(f'     "{k}": {fmt(s[k])}')
+    known = {"id","type","feature","match","weight","family","phrases","unless","any_permissions","any_actions","min_sensitive","brand_names","reason"}
+    assert set(s) <= known, f"packfmt would silently drop: {sorted(set(s) - known)}"  # never lose a field again
     lines.append(f'     "reason": {{"en": {fmt(s["reason"]["en"])},\n                "hi": {fmt(s["reason"]["hi"])}}}}}')
     return ",\n".join(lines)
 def dump(pack, path):

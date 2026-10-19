@@ -61,6 +61,13 @@ Over all five sets, leave-one-set-out: rules alone 88% / 0% false alarms, model 
   (`packs/core/snapshot.json` records the answer for all ~480 messages, and both engines are tested against it).
 - It can be removed from a pack without touching any code.
 
+## App files (APK) are not part of these numbers
+
+The app-file check reads an APK's manifest and flags dangerous *requests* (read SMS, accessibility service, draw over other apps, device admin, call
+control, install apps, contacts and call history). It is tested on 8 small apps built with the Android tools to contain exactly those permissions, on our own
+release APK (compared with Google's `aapt2`), and on damaged and truncated files. It has **not** been measured on real malware, so no catch rate is claimed.
+It can miss a trap that asks for few permissions, and it can flag a legitimate sideloaded app that needs many (the explanation says so).
+
 ## What would make the numbers mean more
 
 1. **Real messages, with consent.** A way for users to donate a message they received (after removing names and numbers), reviewed by a person.
