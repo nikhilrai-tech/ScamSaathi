@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "intel",
     "orgs",
+    "dashboard",
 ]
 
 MIDDLEWARE = [
@@ -76,6 +77,8 @@ STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
+WHITENOISE_USE_FINDERS = True      # serve the dashboard's files straight from the app, no collectstatic needed in development or tests
+WHITENOISE_AUTOREFRESH = DEBUG
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {

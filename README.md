@@ -48,8 +48,8 @@ together (see the [honest market map](docs/MARKET.md), which also lists the proj
 3. **The Saathi loop.** You can name someone you trust. When something looks dangerous the app writes them a short note that
    names the kind of scam and **never contains the message, a link or a number**.
 
-On the institution side, a school, farmer-producer organisation or cooperative bank gets a district dashboard of what is
-circulating and can publish verified alerts. Alerts cannot contain links.
+On the institution side, a school, farmer-producer organisation or cooperative bank gets a **web dashboard** (`/org/`) of what is
+circulating in its district, can publish verified alerts (no links allowed) and confirm scam websites. It never sees messages or people.
 
 ## How it works
 
@@ -79,9 +79,9 @@ More in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (threat model included).
 | | Status |
 |---|---|
 | Python engine, 119 tests; Dart engine gives the same answer on all ~480 messages we have (snapshot) | Verified in CI |
-| API, 41 tests including forged signatures, poisoning and link-filtering | Verified in CI |
+| API, 46 tests including forged signatures, poisoning and link-filtering | Verified in CI |
 | Flutter app: 130 tests, `flutter analyze`, web build, screenshots rendered from the real build | Verified in CI / locally |
-| Real-browser end-to-end tests in Chrome: examples, verdicts, Hindi switch, settings, and "no third-party host contacted, no request contains the message" | Verified in CI |
+| Real-browser end-to-end tests in Chrome (15): examples, verdicts, Hindi switch, app files, the organisation dashboard against a real server, and "no third-party host contacted, no request contains the message" | Verified in CI |
 | App-file (APK) reader: 8 test apps built with the Android tools, the real release APK compared with `aapt2`, damaged and truncated files, and both engines agree; also driven in a real browser | Verified in CI / locally |
 | Docker image: built, ran as non-root, served a signed pack, refused an unsigned one | Verified locally |
 | Android app on a real phone | Tested by the maintainer |
@@ -95,7 +95,7 @@ More in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (threat model included).
 |---|---|---|
 | [`packs/`](packs) | Rule pack, golden corpus, public signing key | JSON |
 | [`engine/`](engine) | Reference engine and CLI (`scamsaathi-engine`) | Python |
-| [`api/`](api) | Signed packs, hashed reports, organisations, alerts | Django REST framework |
+| [`api/`](api) | Signed packs, hashed reports, feedback, organisations, alerts, and the organisation dashboard (`/org/`) | Django REST framework |
 | [`app/`](app) | The mobile and web app, with the same engine in Dart | Flutter |
 | [`tools/`](tools) | Pack signing, brand and screenshot generators | Python, shell |
 

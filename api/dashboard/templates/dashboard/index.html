@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>ScamSaathi: organisation dashboard</title>
+  <link rel="stylesheet" href="/static/dashboard/app.css?v=1">
+</head>
+<body>
+  <header>
+    <h1 id="title">ScamSaathi</h1>
+    <div>
+      <button id="lang" type="button" class="ghost">English</button>
+      <button id="logout" type="button" class="ghost" hidden>Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="login">
+      <h2 id="loginTitle"></h2>
+      <p id="loginHelp"></p>
+      <form id="loginForm" autocomplete="off">
+        <label for="key" id="keyLabel"></label>
+        <input id="key" type="password" autocomplete="off" spellcheck="false" required>
+        <button type="submit" id="loginBtn"></button>
+      </form>
+      <p id="loginError" class="error" role="alert"></p>
+    </section>
+
+    <div id="app" hidden>
+      <section>
+        <h2 id="orgName"></h2>
+        <p id="orgMeta"></p>
+        <p id="verified" class="note"></p>
+      </section>
+
+      <section>
+        <h2 id="trendTitle"></h2>
+        <p id="trendHelp" class="note"></p>
+        <ul id="bars" class="bars"></ul>
+        <p id="noData" class="note" hidden></p>
+      </section>
+
+      <section>
+        <h2 id="alertsTitle"></h2>
+        <p id="alertsHelp" class="note"></p>
+        <form id="alertForm">
+          <label for="aTitle" id="aTitleL"></label><input id="aTitle" maxlength="120" required>
+          <label for="aEn" id="aEnL"></label><textarea id="aEn" maxlength="600" rows="3" required></textarea>
+          <label for="aHi" id="aHiL"></label><textarea id="aHi" maxlength="600" rows="3" required></textarea>
+          <div class="row">
+            <div><label for="aFam" id="aFamL"></label><select id="aFam"></select></div>
+            <div><label for="aDays" id="aDaysL"></label><select id="aDays"></select></div>
+          </div>
+          <button type="submit" id="aBtn"></button>
+        </form>
+        <p id="aMsg" role="status"></p>
+        <ul id="alerts" class="list"></ul>
+      </section>
+
+      <section>
+        <h2 id="reportTitle"></h2>
+        <p id="reportHelp" class="note"></p>
+        <form id="reportForm">
+          <div class="row">
+            <div><label for="rKind" id="rKindL"></label><select id="rKind"><option value="domain"></option><option value="upi"></option><option value="apk_sha256"></option></select></div>
+            <div><label for="rFam" id="rFamL"></label><select id="rFam"></select></div>
+          </div>
+          <label for="rValue" id="rValueL"></label><input id="rValue" autocomplete="off" spellcheck="false" required>
+          <button type="submit" id="rBtn"></button>
+        </form>
+        <p id="rMsg" role="status"></p>
+      </section>
+    </div>
+  </main>
+
+  <footer id="foot"></footer>
+  <script src="/static/dashboard/app.js?v=1"></script>
+</body>
+</html>

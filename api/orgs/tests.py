@@ -118,3 +118,36 @@ class OrgReportAndDashboardTests(ApiTestCase):
         self.assertEqual(d["district"], "nashik")
         d = self.client.get("/v1/org/dashboard", **self.auth(pune)).json()
         self.assertEqual(d["confirmed_indicators_by_family"], {"fake_apk": 1})
+
+
+class DashboardPageTests(ApiTestCase):
+    def test_the_page_is_served_with_a_strict_content_security_policy(self):
+        r = self.client.get("/org/")
+        self.assertEqual(r.status_code, 200)
+        csp = r["Content-Security-Policy"]
+        for part in ("default-src 'none'", "script-src 'self'", "connect-src 'self'", "frame-ancestors 'none'"):
+            self.assertIn(part, csp)
+        self.assertNotIn("unsafe-inline", csp)
+        self.assertEqual((r["X-Content-Type-Options"], r["Referrer-Policy"], r["Cache-Control"]), ("nosniff", "no-referrer", "no-store"))
+
+    def test_the_page_has_no_inline_script_and_loads_only_its_own_files(self):
+        import re
+        html = self.client.get("/org/").content.decode()
+        self.assertFalse(re.search(r"<script(?![^>]*\bsrc=)[^>]*>", html), "inline script found")
+        self.assertNotRegex(html, r"https?://(?!www\.w3\.org)")  # no external resources
+        for url in re.findall(r'(?:src|href)="(/static/[^"?]+)', html):
+            self.assertEqual(self.client.get(url).status_code, 200, url)
+
+    def test_the_script_never_writes_server_text_as_html_or_stores_the_key(self):
+        import pathlib
+        js = (pathlib.Path(__file__).resolve().parents[1] / "dashboard/static/dashboard/app.js").read_text(encoding="utf-8")
+        for banned in ("innerHTML", "outerHTML", "insertAdjacentHTML", "document.write", "eval(", "localStorage", "sessionStorage", "document.cookie"):
+            self.assertNotIn(banned, js, banned)
+
+    def test_only_get_is_allowed(self):
+        self.assertEqual(self.client.post("/org/").status_code, 405)
+
+    def test_the_dashboard_api_says_whether_the_organisation_is_verified(self):
+        key = make_org(verified=False)
+        d = self.client.get("/v1/org/dashboard", HTTP_AUTHORIZATION=f"Api-Key {key}").json()
+        self.assertIs(d["verified"], False)
