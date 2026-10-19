@@ -2,7 +2,9 @@
 
 **A scam shield for the people scammers target most: farmers, students, and their families. It works offline, in their own language, and it brings a trusted person into the loop.**
 
-> **Status: pre-alpha, design stage.** Nothing here is ready to protect anyone yet. See the [roadmap](docs/ARCHITECTURE.md#roadmap) and the [honest market map](docs/MARKET.md).
+> **Status: pre-alpha.** Engine, API and app v0 exist and are tested, but nothing is ready to protect anyone yet:
+> the Android app has not been run on a real phone, accuracy on real messages is unmeasured, and nothing is deployed.
+> See the [roadmap](docs/ARCHITECTURE.md#roadmap) and the [honest market map](docs/MARKET.md).
 
 ## The problem
 
@@ -23,7 +25,7 @@ already knows something is wrong. ScamSaathi is built around three ideas that ar
 On the institution side, a school, a farmer-producer organisation, a cooperative bank or an NGO gets a dashboard of what
 is circulating in its area ("a fake crop-insurance APK is going around this district") and can push an alert to the people it serves.
 
-## What is in this repository (planned)
+## What is in this repository
 
 | Folder | What | Stack |
 |---|---|---|
@@ -31,6 +33,7 @@ is circulating in its area ("a fake crop-insurance APK is going around this dist
 | `engine/` | Reference detection engine and conformance tests | Python |
 | `api/` | Intelligence feed, reports, organisations, alerts | Django REST framework |
 | `app/` | The mobile app, with the same engine in Dart | Flutter |
+| `tools/` | Offline rule-pack signing | Python |
 
 The Python and Dart engines must give the same verdict for every case in the shared corpus; CI enforces it.
 
