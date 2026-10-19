@@ -51,7 +51,7 @@ Future<void> pump(WidgetTester t, AppController c) async {
 Future<void> check(WidgetTester t, String text) async {
   await t.enterText(find.byType(TextField), text);
   await t.tap(find.text(tr('check', 'hi')).first);
-  await t.pump();
+  await t.pumpAndSettle(); // the result card animates in
 }
 
 void main() {
@@ -141,7 +141,7 @@ void main() {
     final (c, _, _) = await setup();
     await pump(t, c);
     c.check(scam);
-    await t.pump();
+    await t.pumpAndSettle();
     expect(find.text(tr('dangerousTitle', 'hi')), findsOneWidget);
     expect(find.text(scam), findsOneWidget); // also visible in the box
   });
