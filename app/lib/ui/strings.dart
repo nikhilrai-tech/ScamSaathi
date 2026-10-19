@@ -120,6 +120,10 @@ const _s = <String, Map<String, String>>{
   'levelMid': {'hi': 'मध्यम', 'en': 'Medium'},
   'levelHigh': {'hi': 'ऊँचा', 'en': 'High'},
   'kindOfScam': {'hi': 'ठगी का प्रकार', 'en': 'Kind of scam'},
+  'webDemo': {
+    'hi': 'वेब डेमो: आपका मैसेज इसी ब्राउज़र टैब में जाँचा जाता है। कोई सर्वर या बाहरी साइट इसे नहीं देखती।',
+    'en': 'Web demo: your message is checked inside this browser tab. No server or third-party site ever sees it.',
+  },
   'howTitle': {
     'hi': 'आपका मैसेज कहीं नहीं जाता',
     'en': 'Your message never leaves this phone',

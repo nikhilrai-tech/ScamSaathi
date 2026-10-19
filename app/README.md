@@ -7,6 +7,7 @@ or English. The check runs on the phone from the signed rule pack in `assets/pac
 cd app
 flutter pub get
 flutter test && flutter analyze
+flutter build web --release --no-web-resources-cdn   # web build with the engine and fonts self-hosted
 flutter run                                         # offline build: no network features at all
 flutter run --dart-define=SCAMSAATHI_API=https://your-api.example   # enables pack updates, scam feed and opt-in reports
 ```

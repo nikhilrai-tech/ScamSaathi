@@ -25,7 +25,7 @@ name on the phone itself, in Hindi or English, explains *why*, and can tell some
 
 | | |
 |---|---|
-| **In your browser** (no install) | **[nikhilrai-tech.github.io/ScamSaathi](https://nikhilrai-tech.github.io/ScamSaathi/)**. The same screens and engine as the app; the check runs in the page and nothing is sent anywhere. Tap an example to start. |
+| **In your browser** (no install) | **[nikhilrai-tech.github.io/ScamSaathi](https://nikhilrai-tech.github.io/ScamSaathi/)**. The same screens and engine as the app. The check runs inside the tab, and the rendering engine and fonts are served from the page itself, so no message and no third-party server is involved (a browser test checks this). Tap an example to start. |
 | **Android** | Download the `arm64-v8a` `.apk` (most phones; `armeabi-v7a` for older ones) from the [latest release](https://github.com/nikhilrai-tech/ScamSaathi/releases/latest) and check it against `SHA256SUMS`. It asks for the internet permission only. It is a **test build signed with a debug key**, and not on the Play Store. |
 | **Command line** | `pipx install scamsaathi-engine` then `scamsaathi "SBI KYC update karo warna account block ho jayega. Link: http://sbi-kyc-update.xyz/verify"`. The package is built by the release workflow and will appear on PyPI after the maintainer enables publishing; until then install the wheel from the release. |
 | **API** | `docker pull ghcr.io/nikhilrai-tech/scamsaathi-api` (published by the release workflow) or `docker compose up --build`, see [docs/API.md](docs/API.md). |
@@ -77,6 +77,7 @@ More in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (threat model included).
 | Python engine, 62 tests; Dart engine, same corpus | Verified in CI |
 | API, 32 tests including forged signatures, poisoning and link-filtering | Verified in CI |
 | Flutter app: 69 tests, `flutter analyze`, web build, screenshots rendered from the real build | Verified in CI / locally |
+| Real-browser end-to-end tests in Chrome: examples, verdicts, Hindi switch, settings, and "no third-party host contacted, no request contains the message" | Verified in CI |
 | Docker image: built, ran as non-root, served a signed pack, refused an unsigned one | Verified locally |
 | Android app on a real phone | Tested by the maintainer |
 | **Detection accuracy on real messages** | **Not measured**; the corpus is small and made up |
@@ -99,6 +100,8 @@ cd engine && pip install -e '.[dev]' && pytest
 cd api && pip install -r requirements.txt && SCAMSAATHI_DEBUG=1 python manage.py test
 # app
 cd app && flutter pub get && flutter test && flutter run -d chrome
+# browser end-to-end tests (real Chrome)
+cd app && flutter build web --release --no-web-resources-cdn && cd ../e2e && npm ci && npm test
 ```
 
 After changing `packs/core/pack.json` run `tools/sync_assets.sh` (tests fail if a bundled copy drifts) and sign the pack

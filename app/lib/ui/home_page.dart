@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -70,6 +71,14 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+                  if (kIsWeb) ...[
+                    Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                      const Icon(Icons.public, size: 18),
+                      const SizedBox(width: 8),
+                      Expanded(child: Text(tr('webDemo', lang), style: Theme.of(context).textTheme.bodySmall)),
+                    ]),
+                    const SizedBox(height: 12),
+                  ],
                   TextField(
                     controller: _text,
                     minLines: 4,
@@ -135,8 +144,7 @@ class _ResultCard extends StatelessWidget {
     final lang = c.lang, p = paletteFor(a.verdict, Theme.of(context).brightness);
     final titleKey = '${a.verdict}Title', adviceKey = '${a.verdict}Advice';
     return Semantics(
-      container: true,
-      label: tr(titleKey, lang),
+      container: true, // read as one block by a screen reader; the title comes from the Text inside, not a second label
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(color: p.background, border: Border.all(color: p.accent, width: 2), borderRadius: BorderRadius.circular(20)),
