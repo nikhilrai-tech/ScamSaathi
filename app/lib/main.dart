@@ -13,6 +13,8 @@ import 'platform/share_intake.dart';
 import 'services/feed.dart';
 import 'services/pack_store.dart';
 import 'services/settings.dart';
+import 'services/speaker.dart';
+import 'ui/onboarding_page.dart';
 import 'ui/home_page.dart';
 import 'ui/theme.dart';
 import 'ui/widgets.dart' show samples;
@@ -49,6 +51,7 @@ Future<void> main() async {
     launch: (uri) => launchUrl(uri, mode: LaunchMode.externalApplication),
     apiBase: _apiBase.isEmpty ? null : Uri.parse(_apiBase),
     pickApk: _pickApkFile,
+    speaker: FlutterTtsSpeaker(),
   );
 
   if (kIsWeb) {
@@ -92,7 +95,29 @@ class ScamSaathiApp extends StatelessWidget {
       theme: buildTheme(Brightness.light),
       darkTheme: buildTheme(Brightness.dark),
       themeMode: themeMode,
-      home: HomePage(controller: controller),
+      home: _Root(controller: controller),
     );
+  }
+}
+
+/// First run on a phone: three short screens, then the home screen. The web demo goes straight to the home screen.
+class _Root extends StatefulWidget {
+  const _Root({required this.controller});
+  final AppController controller;
+
+  @override
+  State<_Root> createState() => _RootState();
+}
+
+class _RootState extends State<_Root> {
+  // the web demo skips the first-run screens unless asked (?onboarding=1), so visitors go straight to trying it
+  late bool _onboarding = kIsWeb ? Uri.base.queryParameters['onboarding'] == '1' : !widget.controller.settings.onboarded;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_onboarding) {
+      return OnboardingPage(controller: widget.controller, onDone: () => setState(() => _onboarding = false));
+    }
+    return HomePage(controller: widget.controller);
   }
 }

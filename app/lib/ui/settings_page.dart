@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app_controller.dart';
 import '../services/saathi.dart';
+import 'info_page.dart';
 import 'strings.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -84,6 +85,22 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ]),
+          const SizedBox(height: 28),
+          Text(tr('aboutSection', lang), style: Theme.of(context).textTheme.titleLarge),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.lock_outline),
+            title: Text(tr('aboutPrivacy', lang), style: big),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => InfoPage(controller: c, kind: InfoKind.privacy))),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.info_outline),
+            title: Text(tr('aboutHow', lang), style: big),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => InfoPage(controller: c, kind: InfoKind.how))),
+          ),
           if (c.apiBase != null) ...[
             const SizedBox(height: 28),
             SwitchListTile(
