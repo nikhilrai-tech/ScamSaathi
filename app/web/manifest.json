@@ -1,11 +1,11 @@
 {
-    "name": "scamsaathi",
-    "short_name": "scamsaathi",
+    "name": "ScamSaathi",
+    "short_name": "ScamSaathi",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "Offline scam shield for farmers, students and families",
+    "background_color": "#0B3C5D",
+    "theme_color": "#0B3C5D",
+    "description": "Offline scam shield for farmers, students and families. Pre-alpha.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

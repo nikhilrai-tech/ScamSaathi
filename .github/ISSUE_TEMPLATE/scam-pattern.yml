@@ -1,0 +1,24 @@
+name: New scam pattern or language
+description: Suggest a scam we do not cover yet, or a language or dialect to add
+labels: ["rules"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **No real people's data.** Describe the scam in your own words and give a made-up example.
+  - type: textarea
+    id: scam
+    attributes:
+      label: How does the scam work?
+      description: Who is targeted, what do they receive, what is the trick, how do victims lose money?
+    validations: {required: true}
+  - type: textarea
+    id: example
+    attributes:
+      label: Made-up example message(s)
+    validations: {required: true}
+  - type: input
+    id: lang
+    attributes:
+      label: Language and region
+      placeholder: "Marathi, Nashik district"

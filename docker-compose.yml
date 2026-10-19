@@ -1,0 +1,16 @@
+# Run the API locally:  SCAMSAATHI_SECRET_KEY=$(openssl rand -hex 32) docker compose up --build
+# The signed pack (pack.json + pack.sig.json) is mounted read-only; sign it first with tools/packsign.py.
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      SCAMSAATHI_SECRET_KEY: ${SCAMSAATHI_SECRET_KEY:?set SCAMSAATHI_SECRET_KEY to a long random value}
+      SCAMSAATHI_ALLOWED_HOSTS: ${SCAMSAATHI_ALLOWED_HOSTS:-localhost}
+    volumes:
+      - ./packs/core:/packs:ro
+      - api-data:/data
+    restart: unless-stopped
+volumes:
+  api-data:

@@ -1,0 +1,25 @@
+name: False alarm or missed scam
+description: ScamSaathi called a normal message a scam, or missed a real scam
+labels: ["detection"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Use a made-up example that looks like the message. Never paste a real message, phone number, UPI ID, name or ID number.**
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What went wrong?
+      options: ["False alarm (normal message flagged)", "Missed scam (scam shown as no warning signs)", "Wrong explanation"]
+    validations: {required: true}
+  - type: textarea
+    id: example
+    attributes:
+      label: Made-up example text
+      description: Keep the wording and language style, change all names, numbers and links.
+    validations: {required: true}
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you get and what did you expect?
+    validations: {required: true}

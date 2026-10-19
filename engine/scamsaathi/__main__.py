@@ -7,7 +7,7 @@ from pathlib import Path
 
 from . import analyze, load_pack
 
-DEFAULT_PACK = Path(__file__).resolve().parents[2] / "packs" / "core" / "pack.json"
+DEFAULT_PACK = Path(__file__).resolve().parent / "data" / "pack.json"
 LABEL = {"en": {"safe": "SAFE", "suspicious": "SUSPICIOUS", "dangerous": "DANGEROUS"},
          "hi": {"safe": "सुरक्षित", "suspicious": "संदिग्ध", "dangerous": "ख़तरनाक"}}
 
