@@ -20,3 +20,6 @@ app/android/local.properties
 app/android/key.properties
 *.jks
 *.keystore
+
+# Release signatures are made by a maintainer at release time with the offline private key, never committed
+packs/**/pack.sig.json
