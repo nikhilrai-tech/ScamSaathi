@@ -1,47 +1,114 @@
+<p align="center">
+  <img src="docs/images/social-preview.png" alt="ScamSaathi: check a message, link or app offline, in Hindi and English, and bring someone you trust in" width="100%">
+</p>
+
+<p align="center">
+  <a href="https://github.com/nikhilrai-tech/ScamSaathi/actions/workflows/ci.yml"><img alt="tests" src="https://github.com/nikhilrai-tech/ScamSaathi/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="LICENSE"><img alt="license: Apache-2.0" src="https://img.shields.io/badge/license-Apache--2.0-blue.svg"></a>
+  <a href="https://github.com/nikhilrai-tech/ScamSaathi/releases"><img alt="release" src="https://img.shields.io/github/v/release/nikhilrai-tech/ScamSaathi?include_prereleases&label=release"></a>
+  <a href="https://nikhilrai-tech.github.io/ScamSaathi/"><img alt="live demo" src="https://img.shields.io/badge/demo-try%20in%20browser-14b8a6.svg"></a>
+  <img alt="status: pre-alpha" src="https://img.shields.io/badge/status-pre--alpha-orange.svg">
+</p>
+
 # ScamSaathi
 
-**A scam shield for the people scammers target most: farmers, students, and their families. It works offline, in their own language, and it brings a trusted person into the loop.**
+**A scam shield for the people scammers target most: farmers, students and their families. It checks a message, link or app
+name on the phone itself, in Hindi or English, explains *why*, and can tell someone you trust.**
 
-> **Status: pre-alpha.** Engine, API and app v0 exist and are tested, but nothing is ready to protect anyone yet:
-> the Android app has not been run on a real phone, accuracy on real messages is unmeasured, and nothing is deployed.
-> See the [roadmap](docs/ARCHITECTURE.md#roadmap) and the [honest market map](docs/MARKET.md).
+> **Pre-alpha.** It works and is tested, but it is not ready to protect anyone yet: the Android app has not been run on a real
+> phone, accuracy on real messages has not been measured, and nothing is deployed. Treat every result as a hint for a
+> human, never as proof. If you lost money, call **1930** or report at [cybercrime.gov.in](https://cybercrime.gov.in).
 
-## The problem
+<p align="center"><img src="docs/images/demo.gif" alt="Demo: paste or pick an example, get a verdict with reasons in Hindi or English" width="280"></p>
 
-Every day people in India lose money to fake "PM-Kisan.apk", "RTO challan" and "KYC update" files, to fake scholarship and job offers,
-to UPI collect-request tricks and to loan-app threats. Most of it arrives on WhatsApp and SMS, in Hindi, Marathi or another
-regional language, and the victim is often alone when it happens.
+## Try it
 
-Existing checkers are mostly English-first, cloud-based, built for one message at a time, and meant for the person who
-already knows something is wrong. ScamSaathi is built around three ideas that are hard to find together:
+| | |
+|---|---|
+| **In your browser** (no install) | **[nikhilrai-tech.github.io/ScamSaathi](https://nikhilrai-tech.github.io/ScamSaathi/)**. The same screens and engine as the app; the check runs in the page and nothing is sent anywhere. Tap an example to start. |
+| **Android** | Download the `arm64-v8a` `.apk` (most phones; `armeabi-v7a` for older ones) from the [latest release](https://github.com/nikhilrai-tech/ScamSaathi/releases/latest) and check it against `SHA256SUMS`. It asks for the internet permission only. It is a **test build signed with a debug key**, not on the Play Store, and untested on real devices. |
+| **Command line** | `pipx install scamsaathi-engine` then `scamsaathi "SBI KYC update karo warna account block ho jayega. Link: http://sbi-kyc-update.xyz/verify"`. The package is built by the release workflow and will appear on PyPI after the maintainer enables publishing; until then install the wheel from the release. |
+| **API** | `docker pull ghcr.io/nikhilrai-tech/scamsaathi-api` (published by the release workflow) or `docker compose up --build`, see [docs/API.md](docs/API.md). |
 
-1. **Share-to-check.** From WhatsApp or SMS, share a message, link or APK to ScamSaathi. The verdict appears in seconds, in
-   simple language, with voice. No typing, no copy-paste.
-2. **Offline and private by default.** Detection runs on the phone from signed rule packs. A message is never uploaded unless the
-   user chooses to report it, and then only the indicators (domain, UPI ID, phone number, APK hash) are sent, not the chat.
-3. **The Saathi loop.** A user can name a trusted person (a son, a teacher, a cooperative officer). When something looks
-   dangerous, that person is told and can answer "don't pay, it's a scam" before the money moves.
+<p align="center"><img src="docs/images/screens.png" alt="Home, a dangerous verdict in Hindi, the reasons in English, and a normal message with no warning signs"></p>
 
-On the institution side, a school, a farmer-producer organisation, a cooperative bank or an NGO gets a dashboard of what
-is circulating in its area ("a fake crop-insurance APK is going around this district") and can push an alert to the people it serves.
+## Why
 
-## What is in this repository
+Every day people in India lose money to a fake "PM-Kisan.apk", an "RTO challan" file, a "KYC update" link, a UPI "collect
+request" or a fake scholarship, and most of it arrives on WhatsApp or SMS in a regional language while the victim is alone.
+Existing checkers are mostly English-first and cloud-based. ScamSaathi is built around three ideas that are hard to find
+together (see the [honest market map](docs/MARKET.md), which also lists the projects that already exist):
+
+1. **Share-to-check.** Share a message from WhatsApp or SMS to the app, or tap an example. The verdict comes with plain-language
+   reasons, not just a label.
+2. **Offline and private by default.** Detection runs on the phone from signed rule packs. The message is never uploaded.
+   Reporting a scam is opt-in and sends only hashes of the link or UPI ID, never the message.
+3. **The Saathi loop.** You can name someone you trust. When something looks dangerous the app writes them a short note that
+   names the kind of scam and **never contains the message, a link or a number**.
+
+On the institution side, a school, farmer-producer organisation or cooperative bank gets a district dashboard of what is
+circulating and can publish verified alerts. Alerts cannot contain links.
+
+## How it works
+
+```
+ WhatsApp / SMS --share--> [ Flutter app ] --verdict + reasons--> user
+                              |   |   '--note (no message)--> trusted person (sent by the user)
+              signed pack     |   '--(opt-in) hashes only--> [ Django API ] --> confirmed hashes (feed)
+              (Ed25519)       v                                   |
+                        Dart engine  <== same 36-case corpus ==>  Python engine
+```
+
+- **Rules are data.** `packs/core/pack.json` holds phrases, link features and weights, with every explanation in English and
+  Hindi. A Dart and a Python engine must both pass the same golden corpus, so they cannot drift apart.
+- **No single clue is enough.** One warning sign can never make a message "dangerous"; at least two must agree. Nothing is
+  ever called "safe": a quiet result says "no warning signs found" and reminds you it is not a guarantee.
+- **Signed updates, fail closed.** A pack is signed offline with Ed25519. The server and the app both reject a missing,
+  tampered, wrongly signed or older pack.
+- **Hard to poison.** A scam indicator needs 3 independent reporters or a verified organisation, real bank and government
+  domains can never be reported, and admins can revoke.
+
+More in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (threat model included).
+
+## What is verified, and what is not
+
+| | Status |
+|---|---|
+| Python engine, 62 tests; Dart engine, same corpus | Verified in CI |
+| API, 32 tests including forged signatures, poisoning and link-filtering | Verified in CI |
+| Flutter app: 69 tests, `flutter analyze`, web build, screenshots rendered from the real build | Verified in CI / locally |
+| Docker image: built, ran as non-root, served a signed pack, refused an unsigned one | Verified locally |
+| **Android app on a real phone** (share intent, SMS/WhatsApp/dialler launch) | **Not done** |
+| **Detection accuracy on real messages** | **Not measured**; the corpus is small and made up |
+| Deployed service, Play Store, iOS, Marathi, APK file analysis, voice | Not built |
+
+## Repository
 
 | Folder | What | Stack |
 |---|---|---|
-| `packs/` | Detection rule packs (data, not code) and the shared test corpus | JSON |
-| `engine/` | Reference detection engine and conformance tests | Python |
-| `api/` | Intelligence feed, reports, organisations, alerts | Django REST framework |
-| `app/` | The mobile app, with the same engine in Dart | Flutter |
-| `tools/` | Offline rule-pack signing | Python |
+| [`packs/`](packs) | Rule pack, golden corpus, public signing key | JSON |
+| [`engine/`](engine) | Reference engine and CLI (`scamsaathi-engine`) | Python |
+| [`api/`](api) | Signed packs, hashed reports, organisations, alerts | Django REST framework |
+| [`app/`](app) | The mobile and web app, with the same engine in Dart | Flutter |
+| [`tools/`](tools) | Pack signing, brand and screenshot generators | Python, shell |
 
-The Python and Dart engines must give the same verdict for every case in the shared corpus; CI enforces it.
+```bash
+# engine
+cd engine && pip install -e '.[dev]' && pytest
+# API
+cd api && pip install -r requirements.txt && SCAMSAATHI_DEBUG=1 python manage.py test
+# app
+cd app && flutter pub get && flutter test && flutter run -d chrome
+```
+
+After changing `packs/core/pack.json` run `tools/sync_assets.sh` (tests fail if a bundled copy drifts) and sign the pack
+with `tools/packsign.py` at release time.
 
 ## Contributing
 
-Rule packs for new scams and for new languages are the most valuable contribution. See [CONTRIBUTING.md](CONTRIBUTING.md).
-Please read [SECURITY.md](SECURITY.md) before reporting a vulnerability, and never include real people's data in an issue.
+The most useful contributions are **new scam patterns, new languages (Marathi first) and false-alarm reports**, with made-up
+examples only. See [CONTRIBUTING.md](CONTRIBUTING.md) and [SECURITY.md](SECURITY.md), and read the [roadmap](docs/ARCHITECTURE.md#roadmap).
 
 ## License
 
-Apache License 2.0, see [LICENSE](LICENSE).
+Apache License 2.0, see [LICENSE](LICENSE). The "ScamSaathi" name and logo are not yet trademark-checked.

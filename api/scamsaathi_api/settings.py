@@ -18,9 +18,8 @@ if not SECRET_KEY:
         raise ImproperlyConfigured("Set SCAMSAATHI_SECRET_KEY (or SCAMSAATHI_DEBUG=1 for local development)")
     SECRET_KEY = "dev-only-not-a-secret"
 
-ALLOWED_HOSTS = [h for h in os.environ.get("SCAMSAATHI_ALLOWED_HOSTS", "").split(",") if h]
-if DEBUG and not ALLOWED_HOSTS:
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+# localhost is always allowed so container health checks work; real hostnames come from the environment
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"] + [h for h in os.environ.get("SCAMSAATHI_ALLOWED_HOSTS", "").split(",") if h]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -36,6 +35,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # serves the admin's static files from the container
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -72,6 +72,10 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {

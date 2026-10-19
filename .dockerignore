@@ -1,0 +1,12 @@
+.git
+.github
+app
+docs
+engine
+tools
+**/__pycache__
+**/*.pyc
+**/.venv
+api/db.sqlite3
+api/staticfiles
+packs/core

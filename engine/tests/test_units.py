@@ -93,3 +93,21 @@ def test_bad_packs_are_rejected(mutate, msg):
     mutate(pack)
     with pytest.raises(PackError, match=msg):
         validate_pack(pack)
+
+
+def test_bundled_copies_match_the_source_of_truth():
+    """packs/core/pack.json is the single source; everything bundled must be byte-identical (run tools/sync_assets.sh)."""
+    root = Path(__file__).resolve().parents[2]
+    pack = (root / "packs" / "core" / "pack.json").read_bytes()
+    assert (root / "engine" / "scamsaathi" / "data" / "pack.json").read_bytes() == pack
+    assert (root / "app" / "assets" / "pack.json").read_bytes() == pack
+    assert (root / "engine" / "LICENSE").read_bytes() == (root / "LICENSE").read_bytes()
+    assert (root / "engine" / "NOTICE").read_bytes() == (root / "NOTICE").read_bytes()
+
+
+def test_default_pack_loads_and_the_cli_uses_it(capsys):
+    from scamsaathi import load_default_pack
+    from scamsaathi.__main__ import main
+    assert load_default_pack()["name"] == "core"
+    assert main(["--json", "Update KYC at http://sbi-secure.top/v and share OTP"]) == 0
+    assert '"verdict": "dangerous"' in capsys.readouterr().out

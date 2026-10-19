@@ -53,6 +53,11 @@ def validate_pack(pack: dict) -> None:
             raise PackError(f"{sid}: unknown type")
 
 
+def load_default_pack() -> dict:
+    """The rule pack that ships inside this package."""
+    return load_pack(Path(__file__).with_name("data") / "pack.json")
+
+
 def load_pack(path) -> dict:
     pack = json.loads(Path(path).read_text(encoding="utf-8"))
     validate_pack(pack)
