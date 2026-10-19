@@ -29,3 +29,19 @@ jobs:
       - run: python -m pyflakes api tools
       - run: python api/manage.py makemigrations --check --dry-run
       - run: python api/manage.py test
+  app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # third-party action: pinned to a commit, not a movable tag (v2.23.0)
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2
+        with:
+          flutter-version: "3.47.4"
+          channel: stable
+          cache: true
+      - run: flutter pub get
+        working-directory: app
+      - run: flutter analyze
+        working-directory: app
+      - run: flutter test
+        working-directory: app
