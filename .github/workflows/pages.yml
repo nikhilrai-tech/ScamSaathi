@@ -35,3 +35,16 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346  # v5.0.1
+  smoke:
+    # after every deploy, drive the LIVE site in Chrome: examples, verdicts, Hindi switch, and that no third-party host is contacted
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: npm ci
+        working-directory: e2e
+      - run: npm test
+        working-directory: e2e
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+          BASE_URL: https://${{ github.repository_owner }}.github.io/ScamSaathi
