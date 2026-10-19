@@ -21,6 +21,7 @@ class Reporter {
     final items = <(String, String)>[
       for (final d in a.indicators['domains'] ?? const <String>[]) ('domain', sha256Hex(d)),
       for (final u in a.indicators['upi_ids'] ?? const <String>[]) ('upi', sha256Hex(u)),
+      for (final h in a.indicators['apk_sha256'] ?? const <String>[]) ('apk_sha256', h), // already the SHA-256 of the file
     ];
     for (final (kind, h) in items) {
       final res = await client.post(

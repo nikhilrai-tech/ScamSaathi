@@ -1,0 +1,96 @@
+{
+ "benign_minimal.apk": {
+  "package": "io.example.minimal",
+  "label": "Minimal",
+  "permissions": [
+   "android.permission.INTERNET"
+  ],
+  "component_permissions": [],
+  "actions": [],
+  "min_sdk": 21,
+  "target_sdk": 34
+ },
+ "torch_ok.apk": {
+  "package": "io.example.torch",
+  "label": "Torch",
+  "permissions": [
+   "android.permission.CAMERA",
+   "android.permission.FLASHLIGHT",
+   "android.permission.VIBRATE"
+  ],
+  "component_permissions": [],
+  "actions": [],
+  "min_sdk": 21,
+  "target_sdk": 34
+ },
+ "fake_pmkisan.apk": {
+  "package": "com.pmkisan.yojana.free",
+  "label": "PM Kisan Yojana",
+  "permissions": [
+   "android.permission.INTERNET",
+   "android.permission.READ_CONTACTS",
+   "android.permission.READ_SMS",
+   "android.permission.RECEIVE_SMS",
+   "android.permission.SEND_SMS"
+  ],
+  "component_permissions": [],
+  "actions": [
+   "android.provider.Telephony.SMS_RECEIVED"
+  ],
+  "min_sdk": 21,
+  "target_sdk": 34
+ },
+ "banking_trojan.apk": {
+  "package": "com.secure.bank.update",
+  "label": "Bank Security Update",
+  "permissions": [
+   "android.permission.INTERNET",
+   "android.permission.READ_SMS",
+   "android.permission.RECEIVE_SMS",
+   "android.permission.REQUEST_INSTALL_PACKAGES",
+   "android.permission.SYSTEM_ALERT_WINDOW"
+  ],
+  "component_permissions": [
+   "android.permission.BIND_ACCESSIBILITY_SERVICE",
+   "android.permission.BIND_DEVICE_ADMIN"
+  ],
+  "actions": [
+   "android.accessibilityservice.AccessibilityService",
+   "android.app.action.DEVICE_ADMIN_ENABLED"
+  ],
+  "min_sdk": 21,
+  "target_sdk": 34
+ },
+ "loan_app.apk": {
+  "package": "com.quick.cash.loan",
+  "label": "Quick Cash",
+  "permissions": [
+   "android.permission.ACCESS_FINE_LOCATION",
+   "android.permission.CAMERA",
+   "android.permission.INTERNET",
+   "android.permission.READ_CALL_LOG",
+   "android.permission.READ_CONTACTS",
+   "android.permission.READ_EXTERNAL_STORAGE",
+   "android.permission.READ_PHONE_STATE"
+  ],
+  "component_permissions": [],
+  "actions": [],
+  "min_sdk": 21,
+  "target_sdk": 34
+ },
+ "call_forwarder.apk": {
+  "package": "com.rto.challan.pay",
+  "label": "RTO Challan",
+  "permissions": [
+   "android.permission.ANSWER_PHONE_CALLS",
+   "android.permission.CALL_PHONE",
+   "android.permission.INTERNET",
+   "android.permission.PROCESS_OUTGOING_CALLS",
+   "android.permission.READ_PHONE_STATE"
+  ],
+  "component_permissions": [],
+  "actions": [],
+  "min_sdk": 21,
+  "target_sdk": 34
+ }
+}

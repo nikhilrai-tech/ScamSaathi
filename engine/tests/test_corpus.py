@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from scamsaathi import analyze, load_pack
+from scamsaathi.apk import parse_apk
 
 PACK_DIR = Path(__file__).resolve().parents[2] / "packs" / "core"
 PACK = load_pack(PACK_DIR / "pack.json")
@@ -15,7 +16,11 @@ CASES = [json.loads(line) for line in (PACK_DIR / "corpus.jsonl").read_text(enco
 
 @pytest.mark.parametrize("case", CASES, ids=[c["id"] for c in CASES])
 def test_case(case):
-    r = analyze(case["text"], PACK)
+    apk = None
+    if case.get("apk"):  # a message together with an app file (packs/core/apk), as when someone shares both
+        apk = parse_apk((PACK_DIR / "apk" / case["apk"]).read_bytes())
+        apk["file_name"] = Path(case["apk"]).stem
+    r = analyze(case["text"], PACK, apk)
     assert r["verdict"] == case["verdict"], r
     assert r["family"] == case["family"], r
     assert sorted(x["id"] for x in r["reasons"]) == sorted(case["signals"]), r

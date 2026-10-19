@@ -67,10 +67,14 @@ class BrandHeader extends StatelessWidget {
   }
 }
 
+/// App files bundled with the app for trying the app check (harmless: they hold only a manifest, so they cannot be installed or run).
+const apkSamples = <(String, String)>[('sampleApkFake', 'assets/apk/fake_pmkisan.apk'), ('sampleApkOk', 'assets/apk/torch_ok.apk')];
+
 class SampleChips extends StatelessWidget {
-  const SampleChips({super.key, required this.lang, required this.onPick});
+  const SampleChips({super.key, required this.lang, required this.onPick, this.onApkSample});
   final String lang;
   final void Function(String text) onPick;
+  final void Function(String assetPath)? onApkSample;
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +88,14 @@ class SampleChips extends StatelessWidget {
             onPressed: () => onPick(text),
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
           ),
+        if (onApkSample != null)
+          for (final (key, asset) in apkSamples)
+            ActionChip(
+              avatar: const Icon(Icons.android, size: 18),
+              label: Text(tr(key, lang), style: const TextStyle(fontSize: 16)),
+              onPressed: () => onApkSample!(asset),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+            ),
       ]),
     ]);
   }

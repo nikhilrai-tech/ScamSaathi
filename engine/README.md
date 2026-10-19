@@ -14,6 +14,7 @@ or executed, and no network is needed. It has no dependencies.
 pipx install scamsaathi-engine          # or: pip install scamsaathi-engine
 scamsaathi "SBI KYC update karo warna account block ho jayega. Link: http://sbi-kyc-update.xyz/verify"
 scamsaathi --lang hi "PM Kisan ki nayi list aayi hai. Yeh file install karo: PM-Kisan-Yojana.apk"
+scamsaathi --apk ~/Downloads/PM-Kisan.apk     # reads the app file's permissions; it is never installed or run
 ```
 
 ```
@@ -34,7 +35,12 @@ result = analyze("Update KYC at http://sbi-secure.top/v and share OTP", pack)
 result["verdict"]      # "safe" | "suspicious" | "dangerous"
 result["family"]       # e.g. "kyc_bank"
 result["reasons"]      # [{"id": ..., "weight": ..., "text": {"en": ..., "hi": ...}}, ...]
-result["indicators"]   # {"domains": [...], "apk_files": [...], "upi_ids": [...]}  (no message text)
+result["indicators"]   # {"domains": [...], "apk_files": [...], "upi_ids": [...], "apk_sha256": [...]}  (no message text)
+
+# an app file: read its permissions (only the manifest is parsed; nothing runs)
+from scamsaathi.apk import parse_apk
+apk = parse_apk(open("PM-Kisan.apk", "rb").read())     # package, permissions, SMS listeners, accessibility/device-admin services
+analyze("", pack, apk)["reasons"]
 ```
 
 A single warning sign can never make a message "dangerous"; at least two must agree. A message with no warning signs is

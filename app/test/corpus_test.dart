@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scamsaathi/engine/apk.dart';
 import 'package:scamsaathi/engine/engine.dart';
 
 void main() {
@@ -18,7 +19,12 @@ void main() {
 
   for (final c in cases) {
     test('corpus: ${c['id']}', () {
-      final r = analyze(c['text'] as String, pack);
+      ApkInfo? apk;
+      if (c['apk'] != null) {
+        final name = c['apk'] as String;
+        apk = parseApk(File('../packs/core/apk/$name').readAsBytesSync())..fileName = name.replaceAll('.apk', '');
+      }
+      final r = analyze(c['text'] as String, pack, apk: apk);
       expect(r.verdict, c['verdict']);
       expect(r.family, c['family']);
       expect(r.reasons.map((x) => x.id).toList()..sort(), (List<String>.from(c['signals'] as List))..sort());

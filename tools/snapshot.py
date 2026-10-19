@@ -13,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "engine"))
 from scamsaathi import analyze, load_pack  # noqa: E402
+from scamsaathi.apk import parse_apk  # noqa: E402
 
 SOURCES = ["corpus", "benchmark", "heldout", "heldout2", "heldout3", "everyday"]
 OUT = ROOT / "packs/core/snapshot.json"
@@ -26,9 +27,16 @@ def build():
             if not line.strip():
                 continue
             r = json.loads(line)
-            a = analyze(r["text"], pack)
-            rows.append({"id": f"{name}:{r['id']}", "text": r["text"], "verdict": a["verdict"], "score": a["score"],
-                         "family": a["family"], "signals": [x["id"] for x in a["reasons"]]})
+            apk = None
+            if r.get("apk"):
+                apk = parse_apk((ROOT / "packs/core/apk" / r["apk"]).read_bytes())
+                apk["file_name"] = Path(r["apk"]).stem
+            a = analyze(r["text"], pack, apk)
+            row = {"id": f"{name}:{r['id']}", "text": r["text"], "verdict": a["verdict"], "score": a["score"],
+                   "family": a["family"], "signals": [x["id"] for x in a["reasons"]]}
+            if r.get("apk"):
+                row["apk"] = r["apk"]
+            rows.append(row)
     return rows
 
 

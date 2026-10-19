@@ -69,5 +69,5 @@ APK feature does not apply).
 5. **Next, in order**
    - Interviews (20) and a pilot with 3 institutions. This decides whether the Saathi loop and dashboard are wanted.
    - A labelled, consented Hindi/Marathi message set to measure precision and recall honestly.
-   - APK analysis on device (package name, permissions, signing certificate; never installed).
+   - APK analysis on device: package name and permissions are done (v0.3); the signing certificate and the app's resources are not read yet.
    - Marathi and more languages, voice read-out, institution web dashboard, deployment, privacy notice for the DPDP Act.

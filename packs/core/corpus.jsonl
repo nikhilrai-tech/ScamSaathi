@@ -59,3 +59,11 @@
 {"id": "sus-fee-only", "text": "Please pay the processing fee of Rs 500 first, then we will continue.", "verdict": "suspicious", "family": "advance_fee", "signals": ["ask.payment", "fee.advance"]}
 {"id": "model-only-h3-scam-005", "text": "Mama, mera purse chori ho gaya, abhi station pe hu. 3500 rupaye is number pe PhonePe kar do, ghar aake dunga.", "verdict": "suspicious", "family": "unknown", "signals": ["model.wording"]}
 {"id": "model-only-h3-scam-009", "text": "Mutual fund se 40% monthly return pao. Mere group me jud jao. Pehle 5000 jama karo.", "verdict": "suspicious", "family": "unknown", "signals": ["model.wording"]}
+{"id": "apk-benign-minimal", "text": "", "apk": "benign_minimal.apk", "verdict": "safe", "family": "none", "signals": []}
+{"id": "apk-torch-ok", "text": "", "apk": "torch_ok.apk", "verdict": "safe", "family": "none", "signals": []}
+{"id": "apk-fake-pmkisan", "text": "", "apk": "fake_pmkisan.apk", "verdict": "dangerous", "family": "fake_apk", "signals": ["apk.brand_name", "apk.contacts_calls", "apk.intercepts_sms", "apk.reads_sms"]}
+{"id": "apk-banking-trojan", "text": "", "apk": "banking_trojan.apk", "verdict": "dangerous", "family": "fake_apk", "signals": ["apk.accessibility", "apk.asks_a_lot", "apk.brand_name", "apk.device_admin", "apk.installs_apps", "apk.overlay", "apk.reads_sms"]}
+{"id": "apk-loan-app", "text": "", "apk": "loan_app.apk", "verdict": "dangerous", "family": "fake_apk", "signals": ["apk.asks_a_lot", "apk.brand_name", "apk.contacts_calls"]}
+{"id": "apk-call-forwarder", "text": "", "apk": "call_forwarder.apk", "verdict": "suspicious", "family": "fake_apk", "signals": ["apk.brand_name", "apk.call_control"]}
+{"id": "apk-with-message", "text": "PM Kisan ki nayi list aayi hai. Yeh app install karo, ye lo file.", "apk": "fake_pmkisan.apk", "verdict": "dangerous", "family": "fake_apk", "signals": ["apk.brand_name", "apk.contacts_calls", "apk.intercepts_sms", "apk.reads_sms", "brand.govt", "install.ask", "model.wording"]}
+{"id": "apk-normal-message-benign-app", "text": "Dad, here is the torch app you asked for.", "apk": "torch_ok.apk", "verdict": "safe", "family": "none", "signals": []}

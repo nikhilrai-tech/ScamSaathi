@@ -8,7 +8,7 @@ from .normalize import normalize
 KNOWN_FEATURES = {"file.apk", "url.apk", "url.shortener", "url.ip_host", "url.punycode", "url.risky_tld",
                   "url.lookalike_gov", "url.lookalike_brand", "ask.payment"}
 LANGS = ("en", "hi")
-LIST_KEYS = ("bare_tlds", "risky_tlds", "shorteners", "gov_words", "official_gov_domains", "brands", "upi_handles", "pay_verbs")
+LIST_KEYS = ("bare_tlds", "risky_tlds", "shorteners", "gov_words", "official_gov_domains", "brands", "upi_handles", "pay_verbs", "sensitive_permissions", "apk_brand_words")
 
 
 class PackError(ValueError):
@@ -57,6 +57,10 @@ def validate_pack(pack: dict) -> None:
                 need(isinstance(items, list) and (key == "unless" or items), f"{sid}: {key} must be a list")
                 for p in items:
                     need(isinstance(p, str) and p and p == normalize(p), f"{sid}: phrase {p!r} is not in normalised form")
+        elif sig.get("type") == "apk":
+            need(any(k in sig for k in ("any_permissions", "any_actions", "min_sensitive", "brand_names")), f"{sid}: an apk signal needs a condition")
+            for key in ("any_permissions", "any_actions"):
+                need(all(isinstance(x, str) and x for x in sig.get(key, [])), f"{sid}: {key} must be strings")
         else:
             raise PackError(f"{sid}: unknown type")
 

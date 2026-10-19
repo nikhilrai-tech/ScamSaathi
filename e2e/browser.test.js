@@ -167,3 +167,29 @@ test('privacy: checking messages sends nothing out, and no request contains the 
   assert.deepEqual([...hosts], [new URL(base).hostname], `the page contacted other hosts: ${[...hosts]}`);
   await page.close();
 });
+
+test('checking an app file in the browser: caught, explained in plain words, and the file never leaves the page', async () => {
+  const { page, requests } = await open();
+  const mark = requests.length;
+  const fixture = path.join(__dirname, '..', 'packs', 'core', 'apk', 'fake_pmkisan.apk');
+  const [chooser] = await Promise.all([page.waitForFileChooser({ timeout: 15000 }), click(page, { role: 'button', text: 'Check an APK file' })]);
+  await chooser.accept([fixture]);
+  const t = await waitForText(page, 'DANGEROUS');
+  for (const needle of ['What this app asks for', 'Read your text messages', 'com.pmkisan.yojana.free', 'never leaves this device']) {
+    assert.ok(t.includes(needle), `missing "${needle}"`);
+  }
+  await sleep(1000);
+  const after = requests.slice(mark);
+  assert.deepEqual(after.filter(r => r.method !== 'GET'), [], 'no upload of any kind');
+  assert.ok(!requests.map(r => r.url + ' ' + r.body).join('\n').includes('pmkisan'), 'the file name or contents must not appear in any request');
+  await shot(page, 'apk-dangerous');
+  await page.close();
+});
+
+test('the harmless sample app file is not accused', async () => {
+  const { page } = await open();
+  await click(page, { role: 'checkbox', label: 'Harmless torch app file' });
+  const t = await waitForText(page, 'No warning signs found');
+  assert.ok(t.includes('Use the flashlight') && !t.includes('DANGEROUS'));
+  await page.close();
+});
