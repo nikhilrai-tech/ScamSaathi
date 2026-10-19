@@ -16,3 +16,16 @@ jobs:
       - run: pip install -e 'engine[dev]'
       - run: python -m pyflakes engine/scamsaathi engine/tests
       - run: python -m pytest -q engine
+  api:
+    runs-on: ubuntu-latest
+    env:
+      SCAMSAATHI_SECRET_KEY: ci-only-not-a-secret
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - run: pip install -r api/requirements.txt pyflakes
+      - run: python -m pyflakes api tools
+      - run: python api/manage.py makemigrations --check --dry-run
+      - run: python api/manage.py test
