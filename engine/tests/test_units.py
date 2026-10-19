@@ -57,9 +57,14 @@ def test_official_domains_are_not_flagged():
     assert not ({"url.lookalike_brand", "url.lookalike_gov"} & e.features)
 
 
+def sig(pack, sid):
+    return next(s for s in pack["signals"] if s["id"] == sid)
+
+
 def test_single_signal_can_never_be_dangerous():
     pack = json.loads(PACK_FILE.read_text(encoding="utf-8"))
-    pack["signals"][0]["weight"] = 60  # file.apk alone, above the dangerous threshold
+    pack.pop("model", None)  # rules only: this test is about the rule threshold
+    sig(pack, "file.apk")["weight"] = 60  # file.apk alone, above the dangerous threshold
     pack["thresholds"]["dangerous"] = 50
     validate_pack(pack)
     r = analyze("open update.apk", pack)  # fires file.apk and nothing else
@@ -81,11 +86,11 @@ def test_indicators_carry_no_message_text():
 @pytest.mark.parametrize("mutate,msg", [
     (lambda p: p.update(schema_version=2), "schema_version"),
     (lambda p: p["signals"].append(dict(p["signals"][0])), "duplicate"),
-    (lambda p: p["signals"][8].update(weight=0), "weight"),
-    (lambda p: p["signals"][8].update(family="nope"), "family"),
-    (lambda p: p["signals"][8]["reason"].pop("hi"), "reason"),
-    (lambda p: p["signals"][8]["phrases"].append("Not Normalised"), "normalised"),
-    (lambda p: p["signals"][8].update(match="regex"), "match"),
+    (lambda p: sig(p, "install.ask").update(weight=0), "weight"),
+    (lambda p: sig(p, "install.ask").update(family="nope"), "family"),
+    (lambda p: sig(p, "install.ask")["reason"].pop("hi"), "reason"),
+    (lambda p: sig(p, "install.ask")["phrases"].append("Not Normalised"), "normalised"),
+    (lambda p: sig(p, "install.ask").update(match="regex"), "match"),
     (lambda p: p["thresholds"].update(suspicious=90), "thresholds"),
 ])
 def test_bad_packs_are_rejected(mutate, msg):

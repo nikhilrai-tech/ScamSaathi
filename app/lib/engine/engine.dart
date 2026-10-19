@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'extract.dart';
+import 'model.dart';
 import 'normalize.dart';
 
 class Reason {
@@ -53,12 +54,17 @@ Analysis analyze(String text, Pack pack) {
     }
     if (hit) fired.add(sig);
   }
+  final model = pack.raw['model'] as Map<String, dynamic>?;
+  if (model != null && modelFires(norm, model, pack.lists)) {
+    fired.add({'id': modelId, 'weight': model['weight'], 'family': 'generic', 'reason': model['reason']});
+  }
 
   final th = pack.thresholds;
   final total = fired.fold<int>(0, (a, s) => a + (s['weight'] as int));
   final score = total > 100 ? 100 : total;
   String verdict;
-  if (score >= (th['dangerous'] as int) && fired.length >= (th['min_signals_dangerous'] as int)) {
+  final ruleSignals = fired.where((s) => s['id'] != modelId).length; // the model alone can never make a message dangerous
+  if (score >= (th['dangerous'] as int) && ruleSignals >= (th['min_signals_dangerous'] as int)) {
     verdict = 'dangerous';
   } else if (score >= (th['suspicious'] as int)) {
     verdict = 'suspicious';
@@ -75,7 +81,10 @@ Analysis analyze(String text, Pack pack) {
   if (verdict == 'safe') {
     family = 'none';
   } else if (byFamily.isNotEmpty) {
-    final entries = byFamily.entries.toList()
+    // a "weak" family (such as advance_fee, a pay-first modifier) names the scam only when nothing more specific fired
+    final weak = ((pack.raw['weak_families'] as List?) ?? const []).cast<String>().toSet();
+    final strong = Map.fromEntries(byFamily.entries.where((e) => !weak.contains(e.key)));
+    final entries = (strong.isEmpty ? byFamily : strong).entries.toList()
       ..sort((a, b) => a.value != b.value ? b.value.compareTo(a.value) : a.key.compareTo(b.key));
     family = entries.first.key;
   } else {

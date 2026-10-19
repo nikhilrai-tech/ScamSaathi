@@ -43,7 +43,17 @@ def test_enough_safe_messages_to_keep_us_honest():
     assert len(safe) >= len(CASES) // 3
 
 
-def test_corpus_has_no_real_looking_phone_numbers():
+def test_no_message_in_any_set_has_a_real_looking_phone_number():
     phone = re.compile(r"(?<!\d)(?:\+?91[- ]?)?[6-9]\d{9}(?!\d)")
-    bad = [c["id"] for c in CASES if phone.search(c["text"])]
-    assert not bad, f"use made-up text, no phone numbers: {bad}"
+    bad = []
+    for name in ["corpus", "benchmark", "heldout", "heldout2", "heldout3", "everyday"]:
+        for line in (PACK_DIR / f"{name}.jsonl").read_text(encoding="utf-8").splitlines():
+            row = json.loads(line) if line.strip() else None
+            if row and phone.search(row["text"]):
+                bad.append(f"{name}:{row['id']}")
+    assert not bad, f"use made-up text such as 9XXXXXXXXX, no real numbers: {bad}"
+
+
+def test_everyday_normal_messages_in_the_golden_corpus_stay_safe():
+    flagged = [c["id"] for c in CASES if c["id"].startswith("safe-") and analyze(c["text"], PACK)["verdict"] != "safe"]
+    assert not flagged, f"a normal message is now flagged: {flagged}"

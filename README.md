@@ -15,9 +15,10 @@
 **A scam shield for the people scammers target most: farmers, students and their families. It checks a message, link or app
 name on the phone itself, in Hindi or English, explains *why*, and can tell someone you trust.**
 
-> **Pre-alpha.** It works and is tested (including on a real Android phone by the maintainer), but it is not ready to protect
-> anyone yet: accuracy on real messages has not been measured and nothing is deployed. Treat every result as a hint for a
-> human, never as proof. If you lost money, call **1930** or report at [cybercrime.gov.in](https://cybercrime.gov.in).
+> **Early release (v0.2).** On a fresh test set of made-up messages it flagged **27 of 36 scams (75%)** and **1 of 36 normal messages
+> (2.8%)**; the honest range for the catch rate is 59% to 86%. It has not been tested on real WhatsApp traffic yet, so use every result
+> as a strong hint, never as proof ([how we measure](docs/EVALUATION.md)). If you lost money, call **1930** or report at
+> [cybercrime.gov.in](https://cybercrime.gov.in).
 
 <p align="center"><img src="docs/images/demo.gif" alt="Demo: paste or pick an example, get a verdict with reasons in Hindi or English" width="280"></p>
 
@@ -61,7 +62,9 @@ circulating and can publish verified alerts. Alerts cannot contain links.
 
 - **Rules are data.** `packs/core/pack.json` holds phrases, link features and weights, with every explanation in English and
   Hindi. A Dart and a Python engine must both pass the same golden corpus, so they cannot drift apart.
-- **No single clue is enough.** One warning sign can never make a message "dangerous"; at least two must agree. Nothing is
+- **Rules plus a wording model.** Phrase rules explain *why*; a small character n-gram model (inside the signed pack) notices wording that
+  is merely *similar* to scams, which lifted the catch rate on unseen messages from 42% to 75%. The model can warn but never alone says "dangerous".
+- **No single clue is enough.** One rule can never make a message "dangerous"; at least two must agree. Nothing is
   ever called "safe": a quiet result says "no warning signs found" and reminds you it is not a guarantee.
 - **Signed updates, fail closed.** A pack is signed offline with Ed25519. The server and the app both reject a missing,
   tampered, wrongly signed or older pack.
@@ -74,13 +77,14 @@ More in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (threat model included).
 
 | | Status |
 |---|---|
-| Python engine, 62 tests; Dart engine, same corpus | Verified in CI |
+| Python engine, 95 tests; Dart engine gives the same answer on all ~480 messages we have (snapshot) | Verified in CI |
 | API, 32 tests including forged signatures, poisoning and link-filtering | Verified in CI |
-| Flutter app: 69 tests, `flutter analyze`, web build, screenshots rendered from the real build | Verified in CI / locally |
+| Flutter app: 97 tests, `flutter analyze`, web build, screenshots rendered from the real build | Verified in CI / locally |
 | Real-browser end-to-end tests in Chrome: examples, verdicts, Hindi switch, settings, and "no third-party host contacted, no request contains the message" | Verified in CI |
 | Docker image: built, ran as non-root, served a signed pack, refused an unsigned one | Verified locally |
 | Android app on a real phone | Tested by the maintainer |
-| **Detection accuracy on real messages** | **Not measured**; the corpus is small and made up |
+| Detection on a fresh made-up test set | 75% of scams caught (27/36), 2.8% false alarms (1/36); see [docs/EVALUATION.md](docs/EVALUATION.md) |
+| **Detection on real messages** | **Not measured yet**: the test sets are made up |
 | Deployed service, Play Store, iOS, Marathi, APK file analysis, voice | Not built |
 
 ## Repository

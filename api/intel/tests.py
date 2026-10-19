@@ -25,7 +25,9 @@ class PackTests(ApiTestCase):
 
     def test_tampered_pack_is_never_served(self):
         p = self.pack_dir / "pack.json"
-        p.write_bytes(p.read_bytes().replace(b'"version": 1', b'"version": 2'))
+        original = p.read_bytes()
+        p.write_bytes(original + b" ")  # any change at all, whatever the pack says
+        self.assertNotEqual(p.read_bytes(), original)
         for url in ("/v1/packs/core/manifest", "/v1/packs/core/pack.json"):
             r = self.client.get(url)
             self.assertEqual(r.status_code, 503)

@@ -199,6 +199,19 @@ void main() {
     });
   });
 
+  group('scam family labels', () {
+    test('every family in the pack has a label in every language, so the "kind of scam" chip and the Saathi note work', () {
+      final pack = Pack.fromBytes(File('../packs/core/pack.json').readAsBytesSync()); // the real pack, not the signed test fixture
+      final families = (pack.raw['families'] as List).cast<String>();
+      expect(families.length, greaterThanOrEqualTo(15));
+      for (final f in families) {
+        for (final lang in ['en', 'hi']) {
+          expect(familyLabels[f]?[lang], isNotNull, reason: 'no $lang label for family $f');
+        }
+      }
+    });
+  });
+
   group('Saathi message', () {
     final pack = Pack.fromBytes(fixturePack);
     final a = analyze('Update KYC at http://sbi-secure.top/v now, share OTP', pack);
