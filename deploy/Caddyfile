@@ -1,0 +1,39 @@
+# Caddy terminates HTTPS and talks plain HTTP to the API inside the compose network.
+# DOMAIN is the public name (for local testing use http://localhost). ADMIN_ALLOW lists the addresses allowed to open /admin/.
+{$DOMAIN} {
+	encode zstd gzip
+
+	# The admin site reads donated messages and verifies organisations: keep it off the public internet.
+	@admin path /admin /admin/*
+	handle @admin {
+		@allowed remote_ip {$ADMIN_ALLOW}
+		handle @allowed {
+			reverse_proxy api:8000
+		}
+		respond "Not found" 404
+	}
+
+	handle {
+		reverse_proxy api:8000
+	}
+
+	# Do not write request details to disk: the logs would hold IP addresses.
+	log {
+		output stdout
+		format filter {
+			wrap console
+			fields {
+				request>remote_ip delete
+				request>client_ip delete
+				request>headers delete
+			}
+		}
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		-Server
+	}
+}

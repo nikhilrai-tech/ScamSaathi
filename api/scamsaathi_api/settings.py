@@ -96,11 +96,15 @@ PACK_PUBLIC_KEY = Path(os.environ.get("SCAMSAATHI_PACK_PUBLIC_KEY", REPO_DIR / "
 REPORT_QUORUM = 3          # distinct reporters before an indicator is confirmed (a verified organisation counts as all of them)
 FEED_PAGE_SIZE = 5000
 
+# the admin site behind an HTTPS proxy needs the public origin, e.g. https://api.example.org
+CSRF_TRUSTED_ORIGINS = [o for o in os.environ.get("SCAMSAATHI_CSRF_TRUSTED_ORIGINS", "").split(",") if o]
+
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000
     SECURE_CONTENT_TYPE_NOSNIFF = True
     SECURE_SSL_REDIRECT = env_bool("SCAMSAATHI_SSL_REDIRECT")
+    SECURE_REDIRECT_EXEMPT = [r"^healthz$"]  # the container health check talks plain HTTP to itself
     if env_bool("SCAMSAATHI_BEHIND_PROXY"):
         SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

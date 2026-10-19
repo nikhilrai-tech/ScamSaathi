@@ -1,0 +1,47 @@
+# Production-style stack: the API behind Caddy, which gets and renews HTTPS certificates by itself.
+#
+#   cp deploy/env.example deploy/.env      # then edit it
+#   docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env up -d
+#
+# See docs/DEPLOY.md for the whole recipe (DNS, backups, the signed pack, organisations, reviewing donated messages).
+services:
+  api:
+    image: ghcr.io/nikhilrai-tech/scamsaathi-api:${SCAMSAATHI_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      SCAMSAATHI_SECRET_KEY: ${SCAMSAATHI_SECRET_KEY:?set SCAMSAATHI_SECRET_KEY to a long random value}
+      SCAMSAATHI_ALLOWED_HOSTS: ${DOMAIN:?set DOMAIN, for example api.example.org}
+      SCAMSAATHI_CSRF_TRUSTED_ORIGINS: https://${DOMAIN}
+      SCAMSAATHI_BEHIND_PROXY: "1"
+      SCAMSAATHI_SSL_REDIRECT: "1"
+    volumes:
+      - ../packs/core:/packs:ro     # pack.json + pack.sig.json, signed on your own machine
+      - api-data:/data              # the database: back this up
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      DOMAIN: ${DOMAIN}
+      ADMIN_ALLOW: ${ADMIN_ALLOW:-127.0.0.1/32}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  api-data:
+  caddy-data:
+  caddy-config:

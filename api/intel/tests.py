@@ -233,3 +233,26 @@ class FeedbackTests(ApiTestCase):
         rows = [json.loads(line) for line in open(out, encoding="utf-8")]
         self.assertEqual({(r["label"], r["family"]) for r in rows}, {("scam", "kyc_bank"), ("benign", "none")})
         self.assertTrue(all(r["id"].startswith("donated-") for r in rows))
+
+
+class PurgeTests(ApiTestCase):
+    def test_rejected_and_stale_unreviewed_messages_go_and_accepted_ones_stay(self):
+        from datetime import timedelta
+        from io import StringIO
+
+        from django.core.management import call_command
+        from django.utils import timezone
+
+        from intel.models import Donation
+        make = lambda i, status, days: Donation.objects.create(text=f"message {i} long enough", text_hash=sha256_hex(str(i)), label="scam", app_verdict="safe",  # noqa: E731
+                                                                status=status, ) and Donation.objects.filter(text_hash=sha256_hex(str(i))).update(created=timezone.now() - timedelta(days=days))
+        make(1, "accepted", 400)       # kept however old
+        make(2, "rejected", 1)         # deleted
+        make(3, "new", 40)             # unreviewed for too long: deleted
+        make(4, "new", 5)              # recent: kept
+        out = StringIO()
+        call_command("purge_donations", "--dry-run", stdout=out)
+        self.assertEqual(Donation.objects.count(), 4)
+        self.assertIn("would delete 1 rejected and 1 unreviewed", out.getvalue())
+        call_command("purge_donations", stdout=out)
+        self.assertEqual(sorted(Donation.objects.values_list("text", flat=True)), ["message 1 long enough", "message 4 long enough"])

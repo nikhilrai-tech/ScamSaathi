@@ -29,7 +29,7 @@ name on the phone itself, in Hindi or English, explains *why*, and can tell some
 | **In your browser** (no install) | **[nikhilrai-tech.github.io/ScamSaathi](https://nikhilrai-tech.github.io/ScamSaathi/)**. The same screens and engine as the app. The check runs inside the tab, and the rendering engine and fonts are served from the page itself, so no message and no third-party server is involved (a browser test checks this). Tap an example to start. |
 | **Android** | Download the `arm64-v8a` `.apk` (most phones; `armeabi-v7a` for older ones) from the [latest release](https://github.com/nikhilrai-tech/ScamSaathi/releases/latest) and check it against `SHA256SUMS`. It asks for the internet permission only. It is a **test build signed with a debug key**, and not on the Play Store. |
 | **Command line** | `pipx install scamsaathi-engine` then `scamsaathi "SBI KYC update karo warna account block ho jayega. Link: http://sbi-kyc-update.xyz/verify"`. The package is built by the release workflow and will appear on PyPI after the maintainer enables publishing; until then install the wheel from the release. |
-| **API** | `docker pull ghcr.io/nikhilrai-tech/scamsaathi-api` (published by the release workflow) or `docker compose up --build`, see [docs/API.md](docs/API.md). |
+| **API** | `docker pull ghcr.io/nikhilrai-tech/scamsaathi-api` (published by the release workflow) or `docker compose up --build`, see [docs/API.md](docs/API.md). To run a server for an institution pilot: [docs/DEPLOY.md](docs/DEPLOY.md). |
 
 <p align="center"><img src="docs/images/screens.png" alt="Home, a dangerous verdict in Hindi, the reasons in English, and a normal message with no warning signs"></p>
 
@@ -79,11 +79,12 @@ More in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (threat model included).
 | | Status |
 |---|---|
 | Python engine, 119 tests; Dart engine gives the same answer on all ~480 messages we have (snapshot) | Verified in CI |
-| API, 46 tests including forged signatures, poisoning and link-filtering | Verified in CI |
+| API, 47 tests including forged signatures, poisoning and link-filtering | Verified in CI |
 | Flutter app: 138 tests, `flutter analyze`, web build, screenshots rendered from the real build | Verified in CI / locally |
 | Real-browser end-to-end tests in Chrome (17): examples, verdicts, Hindi switch, app files, the organisation dashboard against a real server, and "no third-party host contacted, no request contains the message" | Verified in CI |
 | App-file (APK) reader: 8 test apps built with the Android tools, the real release APK compared with `aapt2`, damaged and truncated files, and both engines agree; also driven in a real browser | Verified in CI / locally |
-| Docker image: built, ran as non-root, served a signed pack, refused an unsigned one | Verified locally |
+| Docker image and the production stack (Caddy HTTPS, admin allow-list, no IP logs): built and run locally; the documented backup, export and purge commands run in the image | Verified locally |
+| A public server with a real domain and certificate, load testing | **Not done** ([docs/DEPLOY.md](docs/DEPLOY.md)) |
 | Android app on a real phone | Tested by the maintainer |
 | Detection on a fresh made-up test set | 75% of scams caught (27/36), 2.8% false alarms (1/36); see [docs/EVALUATION.md](docs/EVALUATION.md) |
 | **Detection on real messages** | **Not measured yet**: the test sets are made up |
