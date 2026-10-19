@@ -7,4 +7,5 @@ urlpatterns = [
     path("packs/core/pack.json", views.PackFileView.as_view()),
     path("reports", views.ReportView.as_view()),
     path("feed", views.FeedView.as_view()),
+    path("feedback", views.FeedbackView.as_view()),
 ]

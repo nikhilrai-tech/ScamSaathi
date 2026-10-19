@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../app_controller.dart';
 import '../engine/engine.dart';
+import 'feedback_sheet.dart';
 import 'settings_page.dart';
 import 'strings.dart';
 import 'theme.dart';
@@ -193,6 +194,12 @@ class _ResultCard extends StatelessWidget {
               onPressed: c.report,
               icon: Icon(Icons.flag_outlined, color: p.text),
               label: Text(tr('report', lang), style: TextStyle(fontSize: 17, color: p.text)),
+            ),
+          if (c.canGiveFeedback)
+            TextButton.icon(
+              onPressed: () => showFeedbackSheet(context, c),
+              icon: Icon(Icons.rate_review_outlined, color: p.text),
+              label: Text(tr('wrongResult', lang), style: TextStyle(fontSize: 17, color: p.text)),
             ),
           if (c.reportOutcome == ReportOutcome.sent) Text(tr('reported', lang), style: TextStyle(fontSize: 17, color: p.text)),
           if (c.reportOutcome == ReportOutcome.failed) Text(tr('reportFailed', lang), style: TextStyle(fontSize: 17, color: p.text)),

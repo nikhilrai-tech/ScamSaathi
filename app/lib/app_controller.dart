@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -11,6 +13,9 @@ import 'services/settings.dart';
 typedef Launch = Future<bool> Function(Uri uri);
 
 enum ReportOutcome { none, sent, failed }
+
+/// What the person says is true about a message the app got wrong.
+enum FeedbackLabel { scam, normal }
 
 /// Everything the screens need. Holds no message text beyond the one being checked, and never writes it to disk.
 class AppController extends ChangeNotifier {
@@ -67,6 +72,31 @@ class AppController extends ChangeNotifier {
     if (s == null || a == null) return false;
     final msg = buildSaathiMessage(a, lang, fromName: settings.ownName);
     return launch(whatsapp ? saathiWhatsAppUri(s, msg) : saathiSmsUri(s, msg));
+  }
+
+  /// "This result is wrong" is offered only when the build has a server. Nothing is sent until the person taps Send in the sheet.
+  bool get canGiveFeedback => apiBase != null && result != null;
+
+  /// Sends one message the person chose to send. [text] is already masked on the phone, and the server masks it again.
+  Future<bool> sendFeedback({required FeedbackLabel label, required String text}) async {
+    final a = result, base = apiBase;
+    if (a == null || base == null) return false;
+    try {
+      final res = await client.post(
+        base.resolve('/v1/feedback'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'text': text,
+          'label': label == FeedbackLabel.scam ? 'scam' : 'normal',
+          'app_verdict': a.verdict,
+          'family': familyLabels.containsKey(a.family) ? a.family : '',
+          'lang': lang,
+        }),
+      );
+      return res.statusCode == 201;
+    } on Exception {
+      return false;
+    }
   }
 
   Future<bool> callHelpline() => launch(Uri(scheme: 'tel', path: '1930'));
