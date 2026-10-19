@@ -14,9 +14,16 @@ const ART = path.join(__dirname, 'artifacts');
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json', '.wasm': 'application/wasm',
   '.png': 'image/png', '.otf': 'font/otf', '.ttf': 'font/ttf', '.ico': 'image/x-icon', '.css': 'text/css' };
 
+// BASE_URL=https://host/path runs the same tests against a deployed site instead of the local build
 let server, base, browser;
 
 test.before(async () => {
+  if (process.env.BASE_URL) {
+    base = process.env.BASE_URL.replace(/\/$/, '');
+    browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new', args: ['--no-sandbox'] });
+    fs.mkdirSync(ART, { recursive: true });
+    return;
+  }
   assert.ok(fs.existsSync(path.join(WEB_DIR, 'index.html')), `no web build in ${WEB_DIR}; run flutter build web --release first`);
   server = http.createServer((req, res) => {
     const file = path.join(WEB_DIR, decodeURIComponent(new URL(req.url, 'http://x').pathname).replace(/\/$/, '/index.html'));
@@ -157,6 +164,6 @@ test('privacy: checking messages sends nothing out, and no request contains the 
   }
   // nothing third-party at all: the rendering engine and fonts are bundled, so no CDN ever sees the visitor
   const hosts = new Set(requests.filter(r => /^https?:/.test(r.url)).map(r => new URL(r.url).hostname));
-  assert.deepEqual([...hosts], ['127.0.0.1'], `the page contacted other hosts: ${[...hosts]}`);
+  assert.deepEqual([...hosts], [new URL(base).hostname], `the page contacted other hosts: ${[...hosts]}`);
   await page.close();
 });
