@@ -31,9 +31,7 @@ flutter run --dart-define=SCAMSAATHI_API=https://your-api.example   # enables pa
 
 ## Not done / not verified
 
-- **Android is not built or run on a device or emulator yet.** The share-to-check hook (`MainActivity.kt` and the
-  `SEND` intent filter in `AndroidManifest.xml`) and the SMS/WhatsApp/dialler launches are written but untested on real hardware.
-  The Dart logic, the screens (widget tests) and a web build are verified.
+- Detection accuracy on real messages is not measured; the corpus is small and made up.
 - The application id `io.github.nikhilrai_tech.scamsaathi` is a placeholder. Change it before any Play Store release:
   it cannot be changed afterwards.
 - No APK file analysis yet (the engine reads names and links in text only), no voice read-out, no Marathi yet.
