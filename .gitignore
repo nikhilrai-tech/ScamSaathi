@@ -23,3 +23,4 @@ app/android/key.properties
 
 # Release signatures are made by a maintainer at release time with the offline private key, never committed
 packs/**/pack.sig.json
+deploy/.env

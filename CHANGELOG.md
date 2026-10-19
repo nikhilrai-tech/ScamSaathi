@@ -2,6 +2,31 @@
 
 All notable changes. Versions follow [Semantic Versioning](https://semver.org/); while the major version is 0, anything may change.
 
+## [0.3.0] - 2026-10-20
+
+### Added
+- **Check an app file.** Pick a suspicious `.apk` (in the app, the web demo, or `scamsaathi --apk FILE`) and see what it asks for in plain words: read your SMS and OTPs,
+  read your screen, draw over other apps, make calls for you, install other apps, read contacts and call history. Only the manifest is read; the file is never installed,
+  run or uploaded. Ten new signals with English and Hindi reasons; reporting an app file sends only its SHA-256.
+- **"Is this result wrong?"** sends a message the app got wrong, only after the person reads the exact text (personal details already hidden, editable) and taps Send.
+  The server masks again and stores only the text, a label and what the app said: no IP, device or reporter id. Admin review, export for the maintainers' machines, a retention
+  command, and docs/PRIVACY.md.
+- **Organisation dashboard** at `/org/`: district numbers by kind of scam, verified-only alerts (links refused), and confirming a scam website, UPI ID or app file hashed in the
+  browser. Strict Content-Security-Policy, no framework, no storage.
+- **Listen** button reads the verdict aloud (only generic reasons, never the message), **first-run screens**, and in-app **Privacy** and **How it works** pages.
+- **Deployment recipe**: a production Docker Compose stack with Caddy HTTPS, an admin allow-list and no IP logging (docs/DEPLOY.md).
+- Real-browser tests grew from 6 to 17, including the dashboard against a real server and the APK file chooser.
+
+### Fixed
+- The language switch on the first-run screen did not redraw it (found by a test).
+- The pack formatter silently dropped new fields (now it refuses).
+- An API test that "tampered" with the pack only worked while the pack's text contained one particular version string.
+
+### Known limitations
+- Nothing is hosted yet; the deployment recipe has been run locally, not on a public server. SQLite is used.
+- The app-file check reads only the manifest: a trap with few permissions is not seen, and a legitimate sideloaded app with many permissions is flagged. Not measured on real malware.
+- Accuracy is still measured only on made-up messages (docs/EVALUATION.md). OCR of screenshots is not built.
+
 ## [0.2.0] - 2026-10-20
 
 ### Added

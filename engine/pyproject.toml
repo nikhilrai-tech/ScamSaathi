@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "scamsaathi-engine"
-version = "0.2.0"
+version = "0.3.0"
 description = "Offline, explainable scam-message detection for India (Hindi, Hinglish, English). The engine behind ScamSaathi."
 readme = "README.md"
 requires-python = ">=3.11"
