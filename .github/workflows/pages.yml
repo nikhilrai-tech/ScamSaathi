@@ -43,7 +43,7 @@ jobs:
       - uses: actions/checkout@v7
       - run: npm ci
         working-directory: e2e
-      - run: npm test
+      - run: npm test -- browser.test.js   # the dashboard tests start their own API server, so they are not run against a deployed site
         working-directory: e2e
         env:
           CHROME_PATH: /usr/bin/google-chrome
