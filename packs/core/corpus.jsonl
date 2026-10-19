@@ -1,0 +1,36 @@
+{"id": "safe-otp-warning", "text": "Your OTP is 482913. Do not share it with anyone. - Example Bank", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-family-hinglish", "text": "Hi beta, kal shaam ko ghar aa jana, khana banaya hai", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-meeting", "text": "Meeting rescheduled to 4 pm tomorrow. Please confirm.", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-play-store", "text": "Download the app from the Play Store and log in with your registered mobile number.", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-mandi-hindi", "text": "आपकी फसल का भाव आज मंडी में 2100 रुपये क्विंटल रहा।", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-scholarship-result", "text": "Scholarship results are out. Check the notice board at your college.", "verdict": "safe", "family": "none", "signals": ["scholarship"]}
+{"id": "safe-electricity-bill", "text": "Your electricity bill of Rs 840 is due on 25th. Pay on the official app.", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-otp-advice", "text": "Please do not share your OTP with anyone, even bank staff.", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-never-share-otp", "text": "Never share OTP with anyone. Your login OTP is 55120.", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-drive-link", "text": "Dad, I sent the file https://drive.google.com/file/d/abc/view check it", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-no-fee-interview", "text": "Interview kal 11 baje hai, registration fee nahi lagti, bas ID laana", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-youtube", "text": "Bhai yeh link dekh: https://www.youtube.com/watch?v=abc", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-congratulations", "text": "Congratulations on your result! Proud of you.", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-mandi-hinglish", "text": "Mandi bhav update: soyabean 4800, gehu 2300.", "verdict": "safe", "family": "none", "signals": []}
+{"id": "safe-real-pmkisan-site", "text": "Your PM-Kisan installment status can be checked at https://pmkisan.gov.in", "verdict": "safe", "family": "none", "signals": ["brand.govt"]}
+{"id": "safe-scholarship-form", "text": "Class 10 ka scholarship form bharna hai, last date 30 tarikh. School me jama kare.", "verdict": "safe", "family": "none", "signals": ["scholarship"]}
+{"id": "safe-real-bank-site", "text": "Visit www.sbi.co.in for details", "verdict": "safe", "family": "none", "signals": []}
+{"id": "sus-kyc-blocked", "text": "Your KYC is pending, update KYC today or account will be blocked.", "verdict": "suspicious", "family": "kyc_bank", "signals": ["kyc.ask", "urgency"]}
+{"id": "sus-lottery-ip", "text": "Lottery winner! Claim at http://192.168.10.5/claim", "verdict": "suspicious", "family": "prize_lottery", "signals": ["prize", "url.ip_host"]}
+{"id": "sus-wfh-fee", "text": "Work from home, earn daily, only registration fee Rs 500", "verdict": "suspicious", "family": "advance_fee", "signals": ["fee.advance", "job.offer"]}
+{"id": "sus-loan-fee", "text": "Pay processing fee first, then your loan approved today", "verdict": "suspicious", "family": "advance_fee", "signals": ["fee.advance", "loan.instant"]}
+{"id": "sus-kyc-hindi-link", "text": "आपका केवाईसी अपडेट बाकी है, आज ही अपडेट करें वरना खाता बंद हो जाएगा http://bank-kyc.top/in", "verdict": "suspicious", "family": "kyc_bank", "signals": ["kyc.ask", "url.risky_tld", "urgency"]}
+{"id": "sus-otp-hindi", "text": "SBI से बोल रहे हैं, ओटीपी शेयर करें, खाता बंद हो जाएगा", "verdict": "suspicious", "family": "kyc_bank", "signals": ["otp.ask", "urgency"]}
+{"id": "sus-anydesk", "text": "Download AnyDesk and tell me the 9 digit code to fix your account", "verdict": "suspicious", "family": "remote_access", "signals": ["remote.access"]}
+{"id": "sus-bare-gov-lookalike", "text": "Claim now at kisan-yojana.top/claim", "verdict": "suspicious", "family": "govt_scheme", "signals": ["url.lookalike_gov", "url.risky_tld"]}
+{"id": "sus-fake-crop-insurance", "text": "Check crop insurance status: https://fasal-bima-yojana.in/status", "verdict": "suspicious", "family": "govt_scheme", "signals": ["brand.govt", "url.lookalike_gov"]}
+{"id": "sus-photo-threat", "text": "Pay today or we will send your photos to your contacts.", "verdict": "suspicious", "family": "loan_app", "signals": ["threat.contacts"]}
+{"id": "dan-fake-pmkisan-apk", "text": "PM Kisan ki nayi list aayi hai. Yeh file install karo: PM-Kisan-Yojana.apk", "verdict": "dangerous", "family": "fake_apk", "signals": ["brand.govt", "file.apk", "install.ask"]}
+{"id": "dan-sbi-kyc-link", "text": "SBI KYC update karo warna account block ho jayega. Link: http://sbi-kyc-update.xyz/verify", "verdict": "dangerous", "family": "kyc_bank", "signals": ["kyc.ask", "url.lookalike_brand", "url.risky_tld", "urgency"]}
+{"id": "dan-upi-collect-refund", "text": "Sir, aapka refund pending hai. UPI collect request approve karein aur enter UPI PIN to receive money.", "verdict": "dangerous", "family": "upi_collect", "signals": ["money.receive", "upi.collect"]}
+{"id": "dan-digital-arrest", "text": "This is CBI officer. You are under digital arrest. Do not tell anyone.", "verdict": "dangerous", "family": "impersonation", "signals": ["impersonation", "threat.secrecy"]}
+{"id": "dan-loan-blackmail", "text": "Loan not repaid. Pay today or we will send your photos to your contacts. Account will be blocked", "verdict": "dangerous", "family": "loan_app", "signals": ["threat.contacts", "urgency"]}
+{"id": "dan-kbc-apk", "text": "KBC lucky draw winner! Pay registration fee and install KBC-Prize.apk", "verdict": "dangerous", "family": "fake_apk", "signals": ["fee.advance", "file.apk", "prize"]}
+{"id": "dan-everything", "text": "Your SBI account will be blocked. Update KYC at http://sbi-secure.top/apk/sbi-kyc.apk and share OTP", "verdict": "dangerous", "family": "kyc_bank", "signals": ["kyc.ask", "otp.ask", "url.apk", "url.lookalike_brand", "url.risky_tld", "urgency"]}
+{"id": "sus-shortener-lottery", "text": "Free recharge offer, lottery winner! Click bit.ly/3AbCd", "verdict": "suspicious", "family": "prize_lottery", "signals": ["prize", "url.shortener"]}
+{"id": "dan-punycode-bank", "text": "Verify your account at http://xn--sbi-kyc-9ya.com/login. Account will be blocked", "verdict": "dangerous", "family": "kyc_bank", "signals": ["url.lookalike_brand", "url.punycode", "urgency"]}

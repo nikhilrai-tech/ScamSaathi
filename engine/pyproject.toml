@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scamsaathi-engine"
+version = "0.0.1"
+description = "Offline, explainable scam detection engine for ScamSaathi"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pyflakes"]
+
+[tool.setuptools]
+packages = ["scamsaathi"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

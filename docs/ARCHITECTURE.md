@@ -56,7 +56,7 @@ APK feature does not apply).
 
 ## Roadmap
 1. **Foundations** (this phase): licence, governance, protected `main`, CI.
-2. **Engine v0**: rule-pack schema, 5 scam families (fake APK, KYC/bank, UPI collect, scholarship/job, loan-app), Python engine and corpus.
+2. **Engine v0** (done): rule-pack schema, ten first scam families, Python engine and a golden corpus with strict validation.
 3. **API v0**: pack manifest and signing, report intake, organisations.
 4. **App v0**: share-to-check, Dart engine passing the corpus, Hindi UI.
 5. **Pilot**: 3 institutions, measure precision on a labelled corpus.
